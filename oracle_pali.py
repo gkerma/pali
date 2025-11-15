@@ -206,30 +206,28 @@ if st.sidebar.button("Effacer l’historique 🗑️"):
 #   FONCTION D'AFFICHAGE
 # =========================
 
-def afficher_carte(carte, titre=None, description_position=None, container=None):
-    target = container or st
+import textwrap
 
-    pos_html = f'<div class="oracle-pos">{description_position}</div>' if description_position else ""
-    front_title = titre if titre else "Carte"
-    html = f"""
-    <div class="flip-card">
-      <div class="flip-card-inner">
-        <div class="flip-card-front">
-          {pos_html}
-          <h3>{front_title} — {carte['nom']}</h3>
-          <p><b>Famille :</b> {carte['famille']}</p>
-          <p class="flip-hint">Retourne la carte (survol / toucher) pour voir le message.</p>
+def afficher_carte(...):
+    ...
+    html = textwrap.dedent(f"""
+        <div class="flip-card">
+          <div class="flip-card-inner">
+            <div class="flip-card-front">
+              {pos_html}
+              <h3>{front_title} — {carte['nom']}</h3>
+              <p><b>Famille :</b> {carte['famille']}</p>
+              <p class="flip-hint">Retourne la carte (survol / toucher) pour voir le message.</p>
+            </div>
+            <div class="flip-card-back">
+              {pos_html}
+              <h3>{carte['nom']}</h3>
+              <p><b>Message :</b> {carte['message']}</p>
+              <p><i>Axe de guidance :</i> {carte['axe']}</p>
+            </div>
+          </div>
         </div>
-        <div class="flip-card-back">
-          {pos_html}
-          <h3>{carte['nom']}</h3>
-          <p><b>Message :</b> {carte['message']}</p>
-          <p><i>Axe de guidance :</i> {carte['axe']}</p>
-        </div>
-      </div>
-    </div>
-    """
-    # ⚠️ C’est ÇA qui est crucial : markdown + unsafe_allow_html=True
+    """)
     target.markdown(html, unsafe_allow_html=True)
 
 
