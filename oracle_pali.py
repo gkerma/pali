@@ -209,6 +209,7 @@ if st.sidebar.button("Effacer l’historique 🗑️"):
 # =========================
 #   FONCTION D'AFFICHAGE
 # =========================
+import textwrap  # en haut du fichier si pas déjà importé
 
 def afficher_carte(carte, titre=None, description_position=None, container=None):
     target = container or st
@@ -216,25 +217,25 @@ def afficher_carte(carte, titre=None, description_position=None, container=None)
     pos_html = f'<div class="oracle-pos">{description_position}</div>' if description_position else ""
     front_title = titre if titre else "Carte"
 
+    # IMPORTANT : pas de ``` autour, et on dé-indent avec textwrap.dedent
     raw_html = f"""
-        <div class="flip-card">
-          <div class="flip-card-inner">
-            <div class="flip-card-front">
-              {pos_html}
-              <h3>{front_title} — {carte['nom']}</h3>
-              <p><b>Famille :</b> {carte['famille']}</p>
-              <p class="flip-hint">Retourne la carte (survol / toucher) pour voir le message.</p>
-            </div>
-            <div class="flip-card-back">
-              {pos_html}
-              <h3>{carte['nom']}</h3>
-              <p><b>Message :</b> {carte['message']}</p>
-              <p><i>Axe de guidance :</i> {carte['axe']}</p>
-            </div>
-          </div>
-        </div>
-    """
-
+<div class="flip-card">
+  <div class="flip-card-inner">
+    <div class="flip-card-front">
+      {pos_html}
+      <h3>{front_title} — {carte['nom']}</h3>
+      <p><b>Famille :</b> {carte['famille']}</p>
+      <p class="flip-hint">Retourne la carte (survol / toucher) pour voir le message.</p>
+    </div>
+    <div class="flip-card-back">
+      {pos_html}
+      <h3>{carte['nom']}</h3>
+      <p><b>Message :</b> {carte['message']}</p>
+      <p><i>Axe de guidance :</i> {carte['axe']}</p>
+    </div>
+  </div>
+</div>
+"""
     html = textwrap.dedent(raw_html)
     target.markdown(html, unsafe_allow_html=True)
 
@@ -246,7 +247,6 @@ if st.button("Tirer les cartes ✨"):
     tirage = random.sample(CARDS, nb_cartes)
     timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
 
-    # Sauvegarde historique
     st.session_state["history"].append(
         {
             "datetime": timestamp,
@@ -268,8 +268,7 @@ if st.button("Tirer les cartes ✨"):
             afficher_carte(c, f"Carte {i}")
     else:
         st.markdown("### ✖ Tirage en croix")
-
-        c1, c2, c3, c4, c5 = tirage  # centre, gauche, haut, droite, bas
+        c1, c2, c3, c4, c5 = tirage
 
         top = st.columns(3)
         with top[1]:
