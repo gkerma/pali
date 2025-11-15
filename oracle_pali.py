@@ -26,6 +26,7 @@ else:
     text_color = "#000000"
     border_color = "rgba(0,0,0,0.15)"
 
+# CSS GLOBAL
 st.markdown(
     f"""
     <style>
@@ -228,6 +229,7 @@ def afficher_carte(carte, titre=None, description_position=None, container=None)
       </div>
     </div>
     """
+    # ⚠️ C’est ÇA qui est crucial : markdown + unsafe_allow_html=True
     target.markdown(html, unsafe_allow_html=True)
 
 
