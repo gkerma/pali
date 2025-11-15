@@ -1,6 +1,5 @@
 import random
 from datetime import datetime
-import textwrap
 import streamlit as st
 
 st.set_page_config(page_title="Oracle 48 cartes", page_icon="🔮", layout="centered")
@@ -209,9 +208,6 @@ if st.sidebar.button("Effacer l’historique 🗑️"):
 # =========================
 #   FONCTION D'AFFICHAGE
 # =========================
-# =========================
-#   FONCTION D'AFFICHAGE
-# =========================
 
 def afficher_carte(carte, titre=None, description_position=None, container=None):
     target = container or st
@@ -241,69 +237,155 @@ def afficher_carte(carte, titre=None, description_position=None, container=None)
     target.markdown(html, unsafe_allow_html=True)
 
 # =========================
-#     TIRAGE ACTUEL
+#   ONGLET PRINCIPAL
 # =========================
 
-if st.button("Tirer les cartes ✨"):
-    tirage = random.sample(CARDS, nb_cartes)
-    timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+tab_tirage, tab_methode, tab_cartes, tab_apropos = st.tabs(
+    ["🔮 Tirage", "📜 Méthode", "🃏 Toutes les cartes", "ℹ️ À propos"]
+)
 
-    st.session_state["history"].append(
-        {
-            "datetime": timestamp,
-            "mode": mode,
-            "question": question.strip(),
-            "cards": tirage,
-        }
+# ----- ONGLET TIRAGE -----
+with tab_tirage:
+    if st.button("Tirer les cartes ✨"):
+        tirage = random.sample(CARDS, nb_cartes)
+        timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+
+        st.session_state["history"].append(
+            {
+                "datetime": timestamp,
+                "mode": mode,
+                "question": question.strip(),
+                "cards": tirage,
+            }
+        )
+
+        st.subheader("🔮 Résultat du tirage")
+
+        if question.strip():
+            st.markdown(f"**Intention :** _{question}_")
+            st.write("---")
+
+        if mode == "Tirage libre (1–5 cartes)":
+            st.markdown("### 🔹 Tirage libre")
+            for i, c in enumerate(tirage, start=1):
+                afficher_carte(c, f"Carte {i}")
+        else:
+            st.markdown("### ✖ Tirage en croix")
+            c1, c2, c3, c4, c5 = tirage
+
+            top = st.columns(3)
+            with top[1]:
+                afficher_carte(c3, "Carte 3", "Ressource / Atout")
+
+            mid = st.columns(3)
+            with mid[0]:
+                afficher_carte(c2, "Carte 2", "Défi / Obstacle")
+            with mid[1]:
+                afficher_carte(c1, "Carte 1", "Situation actuelle")
+            with mid[2]:
+                afficher_carte(c4, "Carte 4", "Conseil / Chemin")
+
+            bottom = st.columns(3)
+            with bottom[1]:
+                afficher_carte(c5, "Carte 5", "Issue potentielle (si tu suis ce chemin)")
+
+    # Historique dans cet onglet
+    if show_history and st.session_state["history"]:
+        st.write("---")
+        st.subheader("📚 Historique des tirages (session)")
+
+        for idx, entry in enumerate(reversed(st.session_state["history"]), start=1):
+            titre = f"{idx}. {entry['datetime']} — {entry['mode']}"
+            with st.expander(titre, expanded=False):
+                if entry["question"]:
+                    st.markdown(f"**Intention :** _{entry['question']}_")
+                st.write("")
+                for i, c in enumerate(entry["cards"], start=1):
+                    afficher_carte(c, f"Carte {i}")
+    elif show_history:
+        st.info("Aucun tirage enregistré pour cette session.")
+
+# ----- ONGLET METHODE -----
+with tab_methode:
+    st.subheader("Comment utiliser cet oracle")
+    st.markdown(
+        """
+### 1. Préparer le tirage
+- Pose une **intention claire** ou une question ouverte.
+- Respire quelques instants, centre-toi sur ta sensation du moment.
+- Quand tu te sens prêt·e, lance le tirage.
+
+### 2. Tirage libre (1 à 5 cartes)
+- **1 carte** : énergie / message du moment  
+- **2 cartes** : situation + conseil  
+- **3 cartes** : passé / présent / potentiel  
+- **4 cartes** : blocage – ressource – conseil – issue  
+- **5 cartes** : développement plus fin autour d’un thème (relation, projet…)
+
+Lis chaque carte comme :
+- une **vibration** (famille),
+- un **message direct**,
+- un **axe de guidance** : là où ton attention est invitée.
+
+### 3. Tirage en croix (5 cartes)
+Positions :
+1. **Centre** – Situation actuelle  
+2. **Gauche** – Défi / obstacle  
+3. **Haut** – Ressource / atout  
+4. **Droite** – Conseil / chemin possible  
+5. **Bas** – Issue potentielle *si tu suis ce chemin*
+
+Tu peux lire la croix comme un **mouvement** :
+de ce que tu vis → ce qui te bloque → ce qui t’aide → ce qu’on te suggère → ce qui peut en émerger.
+        """
     )
 
-    st.subheader("🔮 Résultat du tirage")
+# ----- ONGLET TOUTES LES CARTES -----
+with tab_cartes:
+    st.subheader("Liste complète des cartes & légendes")
 
-    if question.strip():
-        st.markdown(f"**Intention :** _{question}_")
-        st.write("---")
+    familles_ordre = ["Voie intérieure", "Croissance", "Relations", "Guidance"]
 
-    if mode == "Tirage libre (1–5 cartes)":
-        st.markdown("### 🔹 Tirage libre")
-        for i, c in enumerate(tirage, start=1):
-            afficher_carte(c, f"Carte {i}")
-    else:
-        st.markdown("### ✖ Tirage en croix")
-        c1, c2, c3, c4, c5 = tirage
+    for fam in familles_ordre:
+        cartes_famille = [c for c in CARDS if c["famille"] == fam]
+        if not cartes_famille:
+            continue
 
-        top = st.columns(3)
-        with top[1]:
-            afficher_carte(c3, "Carte 3", "Ressource / Atout")
+        st.markdown(f"## {fam}")
+        for c in cartes_famille:
+            st.markdown(
+                f"""
+**{c['nom']}**
 
-        mid = st.columns(3)
-        with mid[0]:
-            afficher_carte(c2, "Carte 2", "Défi / Obstacle")
-        with mid[1]:
-            afficher_carte(c1, "Carte 1", "Situation actuelle")
-        with mid[2]:
-            afficher_carte(c4, "Carte 4", "Conseil / Chemin")
+- *Message* : {c['message']}
+- *Axe de guidance* : {c['axe']}
 
-        bottom = st.columns(3)
-        with bottom[1]:
-            afficher_carte(c5, "Carte 5", "Issue potentielle (si tu suis ce chemin)")
+---
+                """
+            )
 
-# =========================
-#     HISTORIQUE
-# =========================
+# ----- ONGLET A PROPOS -----
+with tab_apropos:
+    st.subheader("À propos de cet oracle")
+    st.markdown(
+        """
+Cet oracle de 48 cartes est conçu comme un **outil de réflexion et d’introspection** :
 
-if show_history and st.session_state["history"]:
-    st.write("---")
-    st.subheader("📚 Historique des tirages (session)")
+- Il ne prédit pas l’avenir, il **met en lumière** des dynamiques déjà présentes.
+- Chaque carte est une **porte symbolique** : ton ressenti au moment du tirage fait partie de la réponse.
+- Tu peux l’utiliser :
+  - pour un **tirage quotidien** (énergie du jour),
+  - pour explorer une **relation**,
+  - pour clarifier un **projet ou un passage de vie**.
 
-    for idx, entry in enumerate(reversed(st.session_state["history"]), start=1):
-        titre = f"{idx}. {entry['datetime']} — {entry['mode']}"
-        with st.expander(titre, expanded=False):
-            if entry["question"]:
-                st.markdown(f"**Intention :** _{entry['question']}_")
-            st.write("")
-            for i, c in enumerate(entry["cards"], start=1):
-                afficher_carte(c, f"Carte {i}")
-elif show_history:
-    st.info("Aucun tirage enregistré pour cette session.")
+Tu es toujours libre de :
+- prendre ce qui résonne,
+- laisser ce qui ne parle pas,
+- compléter avec ton propre langage, tes pratiques, ta spiritualité.
 
-st.caption("Oracle de 48 cartes — Flip tarot 3D • Thème clair/sombre • Tirage libre & croix • Historique.")
+> L’oracle ne sait rien à ta place.  
+> Il t’aide à écouter ce que tu sais déjà, un peu plus profondément.
+        """
+    )
+
+st.caption("Oracle de 48 cartes — Flip tarot 3D • Thème clair/sombre • Tirage libre & croix • Méthode • Liste des cartes.")
