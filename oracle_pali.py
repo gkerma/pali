@@ -16,18 +16,20 @@ theme = st.sidebar.radio(
 )
 
 if theme == "Sombre":
-    bg = "#111111"
-    card_bg = "rgba(17,17,17,0.9)"
+    bg = "#050509"
+    card_bg = "rgba(10,10,18,0.96)"
     text_color = "#ffffff"
-    border_color = "rgba(255,255,255,0.12)"
+    border_color = "rgba(255,255,255,0.16)"
+    accent_glow = "rgba(176,124,255,0.35)"
 else:
-    bg = "#f3f3f3"
-    card_bg = "rgba(255,255,255,0.98)"
-    text_color = "#000000"
-    border_color = "rgba(0,0,0,0.15)"
+    bg = "#f0f0f5"
+    card_bg = "rgba(255,255,255,0.99)"
+    text_color = "#111111"
+    border_color = "rgba(0,0,0,0.12)"
+    accent_glow = "rgba(120,120,255,0.25)"
 
 # =========================
-#   CSS GLOBAL
+#   CSS GLOBAL (deck look)
 # =========================
 
 st.markdown(
@@ -36,22 +38,37 @@ st.markdown(
 body {{
     background-color: {bg} !important;
     color: {text_color};
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+}}
+
+main.block-container {{
+    padding-top: 1.5rem;
+    padding-bottom: 3rem;
 }}
 
 .flip-card {{
     background-color: transparent;
     width: 100%;
-    perspective: 1000px;
-    margin-bottom: 1rem;
+    max-width: 320px;
+    perspective: 1200px;
+    margin-bottom: 1.4rem;
+    margin-left: auto;
+    margin-right: auto;
+    transition: transform 0.2s ease-out, box-shadow 0.2s ease-out;
+}}
+
+.flip-card:hover {{
+    transform: translateY(-4px);
 }}
 
 .flip-card-inner {{
     position: relative;
     width: 100%;
-    min-height: 160px;
+    min-height: 190px;
     text-align: left;
     transition: transform 0.6s;
     transform-style: preserve-3d;
+    border-radius: 22px;
 }}
 
 .flip-card:hover .flip-card-inner {{
@@ -68,19 +85,24 @@ body {{
     height: 100%;
     -webkit-backface-visibility: hidden;
     backface-visibility: hidden;
-    border-radius: 14px;
+    border-radius: 22px;
     border: 1px solid {border_color};
-    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.28);
-    padding: 0.9rem 1.1rem;
+    box-shadow:
+        0 18px 40px rgba(0, 0, 0, 0.45),
+        0 0 0 1px rgba(0, 0, 0, 0.15);
+    padding: 1.1rem 1.2rem;
     box-sizing: border-box;
     background-color: {card_bg};
     color: {text_color};
+    background-image:
+        radial-gradient(circle at 15% 0%, rgba(255,255,255,0.12), transparent 55%),
+        radial-gradient(circle at 85% 120%, {accent_glow}, transparent 60%);
 }}
 
 .flip-card-front h3, .flip-card-back h3 {{
     margin-top: 0;
-    margin-bottom: 0.4rem;
-    font-size: 1.05rem;
+    margin-bottom: 0.5rem;
+    font-size: 1.1rem;
 }}
 
 .flip-card-front p, .flip-card-back p {{
@@ -93,17 +115,22 @@ body {{
 }}
 
 .oracle-pos {{
-    font-size: 0.8rem;
+    font-size: 0.78rem;
     text-transform: uppercase;
-    letter-spacing: 0.08em;
-    opacity: 0.7;
-    margin-bottom: 0.2rem;
+    letter-spacing: 0.12em;
+    opacity: 0.75;
+    margin-bottom: 0.25rem;
 }}
 
 .flip-hint {{
-    font-size: 0.75rem;
+    font-size: 0.78rem;
     opacity: 0.6;
-    margin-top: 0.3rem;
+    margin-top: 0.4rem;
+}}
+
+textarea[aria-label="Texte à copier"] {{
+    font-family: "JetBrains Mono", "SF Mono", Menlo, Consolas, monospace;
+    font-size: 0.9rem;
 }}
 </style>
     """,
@@ -115,7 +142,7 @@ body {{
 # =========================
 
 st.title("🔮 Oracle de 48 cartes")
-st.write("Passe la souris ou touche les cartes pour les retourner façon tarot (recto / verso).")
+st.write("Passe la souris ou touche les cartes pour les retourner comme un véritable jeu de tarot.")
 
 # =========================
 #       JEU DE CARTES
@@ -184,15 +211,21 @@ CARDS = [
 # =========================
 
 st.sidebar.header("⚙️ Paramètres du tirage")
+
+daily_mode = st.sidebar.checkbox("Mode tirage du jour (1 carte)", value=False)
+
 mode = st.sidebar.radio(
     "Mode de tirage",
     ["Tirage libre (1–5 cartes)", "Tirage en croix (5 cartes)"],
 )
 
-if mode == "Tirage libre (1–5 cartes)":
-    nb_cartes = st.sidebar.slider("Nombre de cartes :", 1, 5, 1)
+if daily_mode:
+    nb_cartes = 1
 else:
-    nb_cartes = 5
+    if mode == "Tirage libre (1–5 cartes)":
+        nb_cartes = st.sidebar.slider("Nombre de cartes :", 1, 5, 1)
+    else:
+        nb_cartes = 5
 
 question = st.text_input("📝 Question / intention (facultatif)", "")
 
@@ -237,6 +270,44 @@ def afficher_carte(carte, titre=None, description_position=None, container=None)
     target.markdown(html, unsafe_allow_html=True)
 
 # =========================
+#   TEXTE PRÊT À COPIER
+# =========================
+
+def build_summary(tirage, mode, question, timestamp, daily_mode):
+    lines = []
+    titre = "Tirage du jour" if daily_mode else "Tirage de l’oracle"
+    lines.append(f"{titre} — {timestamp}")
+    if question.strip():
+        lines.append(f"Question : {question.strip()}")
+    lines.append(f"Mode : {mode}")
+    lines.append("")
+
+    if mode.startswith("Tirage libre"):
+        for i, c in enumerate(tirage, start=1):
+            lines.append(
+                f"Carte {i} — {c['nom']} "
+                f"(famille : {c['famille']})\n"
+                f"  Message : {c['message']}\n"
+                f"  Axe : {c['axe']}"
+            )
+    else:
+        positions = [
+            "Situation actuelle",
+            "Défi / obstacle",
+            "Ressource / atout",
+            "Conseil / chemin",
+            "Issue potentielle (si tu suis ce chemin)",
+        ]
+        for i, (c, pos) in enumerate(zip(tirage, positions), start=1):
+            lines.append(
+                f"Carte {i} — {c['nom']} [{pos}]\n"
+                f"  Message : {c['message']}\n"
+                f"  Axe : {c['axe']}"
+            )
+
+    return "\n".join(lines)
+
+# =========================
 #   ONGLET PRINCIPAL
 # =========================
 
@@ -246,7 +317,11 @@ tab_tirage, tab_methode, tab_cartes, tab_apropos = st.tabs(
 
 # ----- ONGLET TIRAGE -----
 with tab_tirage:
-    if st.button("Tirer les cartes ✨"):
+    btn_label = "Tirer la carte du jour ✨" if daily_mode else "Tirer les cartes ✨"
+
+    summary_text = ""
+
+    if st.button(btn_label):
         tirage = random.sample(CARDS, nb_cartes)
         timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
 
@@ -254,6 +329,7 @@ with tab_tirage:
             {
                 "datetime": timestamp,
                 "mode": mode,
+                "daily": daily_mode,
                 "question": question.strip(),
                 "cards": tirage,
             }
@@ -289,19 +365,35 @@ with tab_tirage:
             with bottom[1]:
                 afficher_carte(c5, "Carte 5", "Issue potentielle (si tu suis ce chemin)")
 
+        # Texte prêt à copier
+        summary_text = build_summary(tirage, mode, question, timestamp, daily_mode)
+        st.markdown("#### 📝 Texte prêt à copier")
+        st.text_area("Texte à copier", summary_text, height=220)
+
     # Historique dans cet onglet
     if show_history and st.session_state["history"]:
         st.write("---")
         st.subheader("📚 Historique des tirages (session)")
 
         for idx, entry in enumerate(reversed(st.session_state["history"]), start=1):
-            titre = f"{idx}. {entry['datetime']} — {entry['mode']}"
-            with st.expander(titre, expanded=False):
+            titre_hist = f"{idx}. {entry['datetime']} — {entry['mode']}"
+            if entry.get("daily"):
+                titre_hist += " (tirage du jour)"
+            with st.expander(titre_hist, expanded=False):
                 if entry["question"]:
                     st.markdown(f"**Intention :** _{entry['question']}_")
                 st.write("")
                 for i, c in enumerate(entry["cards"], start=1):
                     afficher_carte(c, f"Carte {i}")
+                txt = build_summary(
+                    entry["cards"],
+                    entry["mode"],
+                    entry["question"],
+                    entry["datetime"],
+                    entry.get("daily", False),
+                )
+                st.markdown("**Texte prêt à copier :**")
+                st.text_area("Texte à copier", txt, height=200, key=f"hist_{idx}")
     elif show_history:
         st.info("Aucun tirage enregistré pour cette session.")
 
@@ -337,6 +429,11 @@ Positions :
 
 Tu peux lire la croix comme un **mouvement** :
 de ce que tu vis → ce qui te bloque → ce qui t’aide → ce qu’on te suggère → ce qui peut en émerger.
+
+### 4. Tirage du jour
+- Active le **mode tirage du jour** dans la barre latérale.
+- Une seule carte : **climat intérieur, ton axe de la journée**.
+- Note le texte prêt à copier dans ton journal pour suivre l’évolution des tirages.
         """
     )
 
@@ -388,4 +485,4 @@ Tu es toujours libre de :
         """
     )
 
-st.caption("Oracle de 48 cartes — Flip tarot 3D • Thème clair/sombre • Tirage libre & croix • Méthode • Liste des cartes.")
+st.caption("Oracle de 48 cartes — Deck physique virtuel • Thème clair/sombre • Tirage libre, croix, tirage du jour • Historique • Texte prêt à copier.")
