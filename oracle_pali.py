@@ -1,5 +1,6 @@
 import random
 from datetime import datetime
+import textwrap
 import streamlit as st
 
 st.set_page_config(page_title="Oracle 48 cartes", page_icon="🔮", layout="centered")
@@ -26,7 +27,10 @@ else:
     text_color = "#000000"
     border_color = "rgba(0,0,0,0.15)"
 
-# CSS GLOBAL
+# =========================
+#   CSS GLOBAL
+# =========================
+
 st.markdown(
     f"""
     <style>
@@ -206,11 +210,13 @@ if st.sidebar.button("Effacer l’historique 🗑️"):
 #   FONCTION D'AFFICHAGE
 # =========================
 
-import textwrap
+def afficher_carte(carte, titre=None, description_position=None, container=None):
+    target = container or st
 
-def afficher_carte(...):
-    ...
-    html = textwrap.dedent(f"""
+    pos_html = f'<div class="oracle-pos">{description_position}</div>' if description_position else ""
+    front_title = titre if titre else "Carte"
+
+    raw_html = f"""
         <div class="flip-card">
           <div class="flip-card-inner">
             <div class="flip-card-front">
@@ -227,9 +233,10 @@ def afficher_carte(...):
             </div>
           </div>
         </div>
-    """)
-    target.markdown(html, unsafe_allow_html=True)
+    """
 
+    html = textwrap.dedent(raw_html)
+    target.markdown(html, unsafe_allow_html=True)
 
 # =========================
 #     TIRAGE ACTUEL
