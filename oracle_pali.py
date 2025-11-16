@@ -697,6 +697,29 @@ def iching_line_label(line_type: str) -> str:
     }
     return mapping.get(line_type, line_type)
 
+def iching_nuclear_bits(bits_main):
+    """
+    bits_main : 6 bits (bas → haut).
+    Nucléaire (hu gua) classique :
+    - trigramme bas : lignes 2,3,4
+    - trigramme haut : lignes 3,4,5
+    => [l2, l3, l4, l3, l4, l5]
+    """
+    return [
+        bits_main[1],
+        bits_main[2],
+        bits_main[3],
+        bits_main[2],
+        bits_main[3],
+        bits_main[4],
+    ]
+
+def iching_complementary_bits(bits_main):
+    """
+    Complémentaire : inversion de toutes les lignes (yin ↔ yang).
+    """
+    return [1 - b for b in bits_main]
+
 # Trigrammes selon binaire (bas → haut)
 # 111 ☰ Ciel, 110 ☱ Lac, 101 ☲ Feu, 100 ☳ Tonnerre,
 # 011 ☴ Vent, 010 ☵ Eau, 001 ☶ Montagne, 000 ☷ Terre
@@ -751,8 +774,20 @@ def iching_main_and_changed(traits):
     num_changed = hex_number_from_bits(bits_changed)
     return num_main, num_changed, bits_main, bits_changed
 
-def build_iching_classic_summary(main_card, changed_card, num_main, num_changed,
-                                 traits, question, timestamp, system):
+def build_iching_classic_summary(
+    main_card,
+    changed_card,
+    nuclear_card,
+    complementary_card,
+    num_main,
+    num_changed,
+    num_nuclear,
+    num_complementary,
+    traits,
+    question,
+    timestamp,
+    system,
+):
     lines = []
     lines.append(f"Tirage I Ching classique (6 traits) — {timestamp}")
     if system:
@@ -766,14 +801,28 @@ def build_iching_classic_summary(main_card, changed_card, num_main, num_changed,
         label = iching_line_label(t)
         lines.append(f"  Ligne {i} : {symbol} — {label}")
     lines.append("")
+    # Hexagramme principal
     lines.append(f"Hexagramme principal : #{num_main} — {main_card['nom']}")
     lines.append(f"  Message : {main_card['message']}")
     lines.append(f"  Axe : {main_card['axe']}")
-    if num_changed != num_main and changed_card is not None:
+    # Mutation
+    if num_changed is not None and changed_card is not None and num_changed != num_main:
         lines.append("")
         lines.append(f"Hexagramme de mutation : #{num_changed} — {changed_card['nom']}")
         lines.append(f"  Message : {changed_card['message']}")
         lines.append(f"  Axe : {changed_card['axe']}")
+    # Nucléaire
+    if num_nuclear is not None and nuclear_card is not None:
+        lines.append("")
+        lines.append(f"Hexagramme nucléaire : #{num_nuclear} — {nuclear_card['nom']}")
+        lines.append(f"  Message : {nuclear_card['message']}")
+        lines.append(f"  Axe : {nuclear_card['axe']}")
+    # Complémentaire
+    if num_complementary is not None and complementary_card is not None:
+        lines.append("")
+        lines.append(f"Hexagramme complémentaire : #{num_complementary} — {complementary_card['nom']}")
+        lines.append(f"  Message : {complementary_card['message']}")
+        lines.append(f"  Axe : {complementary_card['axe']}")
     return "\n".join(lines)
 
 # =========================
@@ -900,7 +949,7 @@ with tab_tirage:
             st.text_area("Texte à copier", summary_text, height=220)
 
     # ---------- TIRAGE I CHING CLASSIQUE HARDCORE ----------
-    elif tirage_mode_type.startswith("Tirage I Ching classique"):
+        elif tirage_mode_type.startswith("Tirage I Ching classique"):
         if not system_name.startswith("I Ching"):
             st.warning("Le tirage I Ching classique est réservé au jeu I Ching.")
         else:
@@ -909,8 +958,21 @@ with tab_tirage:
                 traits = [random.choice(["yin", "yang", "old_yin", "old_yang"]) for _ in range(6)]
                 num_main, num_changed, bits_main, bits_changed = iching_main_and_changed(traits)
 
+                # Hexagramme principal
                 main_hex = ICHING_CARDS[num_main - 1]
+
+                # Hexagramme de mutation (si différent)
                 changed_hex = ICHING_CARDS[num_changed - 1] if num_changed != num_main else None
+
+                # Hexagramme nucléaire
+                bits_nuclear = iching_nuclear_bits(bits_main)
+                num_nuclear = hex_number_from_bits(bits_nuclear)
+                nuclear_hex = ICHING_CARDS[num_nuclear - 1]
+
+                # Hexagramme complémentaire
+                bits_complementary = iching_complementary_bits(bits_main)
+                num_complementary = hex_number_from_bits(bits_complementary)
+                complementary_hex = ICHING_CARDS[num_complementary - 1]
 
                 timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
 
@@ -922,11 +984,12 @@ with tab_tirage:
                         "mode_label": "Tirage I Ching classique (6 traits)",
                         "daily": False,
                         "question": question.strip(),
-                        "cards": [main_hex] if changed_hex is None else [main_hex, changed_hex],
-                        "positions": None,
+                        # on stocke juste références numériques, les cartes seront recalculées
                         "traits": traits,
                         "hex_num_main": num_main,
                         "hex_num_changed": num_changed,
+                        "hex_num_nuclear": num_nuclear,
+                        "hex_num_complementary": num_complementary,
                     }
                 )
 
@@ -950,18 +1013,28 @@ with tab_tirage:
                     st.markdown(f"### Hexagramme de mutation — #{num_changed}")
                     afficher_carte(changed_hex, "Hexagramme de mutation")
 
+                st.markdown(f"### Hexagramme nucléaire — #{num_nuclear}")
+                afficher_carte(nuclear_hex, "Hexagramme nucléaire")
+
+                st.markdown(f"### Hexagramme complémentaire — #{num_complementary}")
+                afficher_carte(complementary_hex, "Hexagramme complémentaire")
+
                 summary_text = build_iching_classic_summary(
                     main_hex,
                     changed_hex,
+                    nuclear_hex,
+                    complementary_hex,
                     num_main,
                     num_changed,
+                    num_nuclear,
+                    num_complementary,
                     traits,
                     question,
                     timestamp,
                     system_name,
                 )
                 st.markdown("#### 📝 Texte prêt à copier")
-                st.text_area("Texte à copier", summary_text, height=260)
+                st.text_area("Texte à copier", summary_text, height=320)
 
     # ----- Historique -----
     if show_history and st.session_state["history"]:
@@ -988,6 +1061,9 @@ with tab_tirage:
                     traits = entry.get("traits", [])
                     num_main = entry.get("hex_num_main")
                     num_changed = entry.get("hex_num_changed")
+                    num_nuclear = entry.get("hex_num_nuclear")
+                    num_complementary = entry.get("hex_num_complementary")
+
                     if traits:
                         st.markdown("**Traits (du bas vers le haut) :**")
                         for i, t in enumerate(traits, start=1):
@@ -996,27 +1072,43 @@ with tab_tirage:
                             st.markdown(f"- Ligne {i} : `{symbol}` — {label}")
                         st.write("")
 
-                    if num_main:
-                        main_hex = ICHING_CARDS[num_main - 1]
+                    main_hex = ICHING_CARDS[num_main - 1] if num_main else None
+                    changed_hex = ICHING_CARDS[num_changed - 1] if num_changed and num_changed != num_main else None
+                    nuclear_hex = ICHING_CARDS[num_nuclear - 1] if num_nuclear else None
+                    complementary_hex = ICHING_CARDS[num_complementary - 1] if num_complementary else None
+
+                    if main_hex is not None:
                         st.markdown(f"**Hexagramme principal — #{num_main}**")
                         afficher_carte(main_hex, "Hexagramme principal")
-                    if num_changed and num_changed != num_main:
-                        changed_hex = ICHING_CARDS[num_changed - 1]
+
+                    if changed_hex is not None:
                         st.markdown(f"**Hexagramme de mutation — #{num_changed}**")
                         afficher_carte(changed_hex, "Hexagramme de mutation")
 
+                    if nuclear_hex is not None:
+                        st.markdown(f"**Hexagramme nucléaire — #{num_nuclear}**")
+                        afficher_carte(nuclear_hex, "Hexagramme nucléaire")
+
+                    if complementary_hex is not None:
+                        st.markdown(f"**Hexagramme complémentaire — #{num_complementary}**")
+                        afficher_carte(complementary_hex, "Hexagramme complémentaire")
+
                     txt = build_iching_classic_summary(
                         main_hex,
-                        changed_hex if num_changed and num_changed != num_main else None,
+                        changed_hex,
+                        nuclear_hex,
+                        complementary_hex,
                         num_main,
                         num_changed,
+                        num_nuclear,
+                        num_complementary,
                         traits,
                         entry["question"],
                         entry["datetime"],
                         entry.get("system"),
                     )
                     st.markdown("**Texte prêt à copier :**")
-                    st.text_area("Texte à copier", txt, height=260, key=f"hist_{idx}")
+                    st.text_area("Texte à copier", txt, height=320, key=f"hist_{idx}")
 
                 # HISTORIQUE : AUTRES MODES
                 else:
