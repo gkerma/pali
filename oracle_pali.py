@@ -1078,6 +1078,12 @@ with st.sidebar.expander("📘 Documentation"):
         [
             "Méthode",
             "À propos",
+            "Lexique",
+            "FAQ",
+            "Philosophie",
+            "Paramètres avancés",
+            "Galerie des cartes",
+            "Rituels & pratiques",
         ]
     )
 
@@ -1434,6 +1440,176 @@ elif doc_section == "Philosophie":
 
     Puissent ces outils t’accompagner avec justesse.
     """)
+
+# ---------------------------------------------------------------
+# 🔧 PARAMÈTRES AVANCÉS
+# ---------------------------------------------------------------
+elif doc_section == "Paramètres avancés":
+    st.title("🔧 Paramètres avancés")
+
+    st.markdown("""
+    Cette section propose des options destinées aux utilisateurs avancés.
+
+    ---
+
+    ## 💾 Sauvegarde & Export
+
+    ### **📤 Export Markdown**
+    Exporter un tirage au format texte (lisible, partageable, archivable).
+
+    ### **📄 Export PDF (bêta)**
+    Fonction prévue pour une version future : impression "comme un livret".
+
+    ---
+
+    ## 🕒 Tirage automatique quotidien
+
+    Ce mode génère automatiquement une carte chaque matin.
+
+    - 📅 **Heure fixe** ou **au premier lancement du jour**
+    - 💬 Option d’envoyer une notification interne (Streamlit session)
+    - 🔄 Historique dédié "Tirages du jour"
+
+    _(Je peux l’implémenter si tu veux.)_
+
+    ---
+
+    ## 🎯 Mode “Consultation professionnelle”
+
+    Pour les praticiens :
+    - Nom du consultant
+    - Date / Heure
+    - Intention
+    - Tirage verrouillé (pas de reroll)
+    - Export direct en Markdown / PDF
+    - Signature du consultant
+
+    _(Fonction désactivée par défaut.)_
+
+    ---
+
+    ## 🧪 Dev Tools
+
+    - Rafraîchir les jeux (Oracle / Runes / Pāli / I Ching / Totems)  
+    - Voir les structures internes (hexagrammes, runes, packs)  
+    - Mode debug (affiche les ID internes des tirages)
+
+    """)
+
+# ---------------------------------------------------------------
+# 🎨 GALERIE DES CARTES
+# ---------------------------------------------------------------
+elif doc_section == "Galerie des cartes":
+    st.title("🎨 Galerie des cartes et symboles")
+
+    st.markdown("""
+    Explore ici l'ensemble des cartes et symboles utilisés dans l'application.
+
+    ---
+
+    ## 🔮 Oracle 48 cartes
+    """)
+
+    cols = st.columns(3)
+    for i, carte in enumerate(CARDS):
+        with cols[i % 3]:
+            st.markdown(f"**{carte['nom']}**<br><span style='opacity:0.7'>{carte['famille']}</span>", unsafe_allow_html=True)
+
+    st.write("---")
+
+    st.markdown("## ᚱ Runes nordiques (Elder Futhark)")
+    rune_cols = st.columns(4)
+    for i, rune in enumerate(RUNES_LIST):  # 👉 À définir dans ton fichier
+        with rune_cols[i % 4]:
+            st.markdown(f"### {rune['rune']}  \n{rune['nom']}")
+
+    st.write("---")
+
+    st.markdown("## ☯ I Ching – 64 hexagrammes")
+    hex_cols = st.columns(4)
+    for i, hex_data in enumerate(HEXAGRAMS):  # 👉 À définir dans ton fichier
+        with hex_cols[i % 4]:
+            st.markdown(f"**{hex_data['id']:02d}. {hex_data['nom']}**")
+
+    st.write("---")
+
+    st.markdown("## 🐾 Animaux Totems")
+    animal_cols = st.columns(3)
+    for i, animal in enumerate(ANIMALS):  # 👉 liste d'animaux que je peux générer
+        with animal_cols[i % 3]:
+            st.markdown(f"**{animal['nom']}**<br><i>{animal['origine']}</i>", unsafe_allow_html=True)
+
+# ---------------------------------------------------------------
+# 🌙 RITUELS & PRATIQUES
+# ---------------------------------------------------------------
+elif doc_section == "Rituels & pratiques":
+    st.title("🌙 Rituels & pratiques d'accompagnement")
+
+    st.markdown("""
+    Ces rituels peuvent être utilisés avant ou après un tirage.
+
+    ---
+
+    ## 🌑 Rituel de Nouvelle Lune
+    - Introspection  
+    - Nouvelle intention  
+    - Tirage conseillé : *Voie intérieure (3 cartes)*
+
+    Étapes :
+    1. Respire profondément 3 fois.  
+    2. Note une intention simple.  
+    3. Fais un tirage d'ouverture.  
+
+    ---
+
+    ## 🌕 Rituel de Pleine Lune
+    - Libération  
+    - Clôture d’un cycle  
+    - Tirage conseillé : *Libération (3 cartes)*
+
+    ---
+
+    ## 🍃 Rituel de Réalignement
+    À utiliser quand tout semble confus.
+
+    1. Pose la main sur ton cœur.  
+    2. Respire 5 fois.  
+    3. Demande : *« Quelle est la prochaine étape juste ? »*  
+    4. Tire une seule carte.
+
+    ---
+
+    ## 🔥 Rituel de Transformation
+    Idéal en période de changement.
+
+    Tirage recommandé :  
+    - *Passé / Présent / Mutation (3 cartes)*  
+    - ou *I Ching classique*
+
+    ---
+
+    ## 🌬 Rituel d’Apaisement
+    Pour l’anxiété, les tensions, l’agitation mentale.
+
+    1. Fermer les yeux  
+    2. Inspirer 4 sec – expirer 6 sec  
+    3. Tirer une carte liée au souffle (Oracle / Pāli)
+
+    ---
+
+    ## 🐾 Rituel Animaux Totems
+    1. Appelle intérieurement ton animal allié.  
+    2. Tire une carte Totem.  
+    3. Relis la médecine associée.  
+
+    ---  
+
+    Je peux ajouter :
+    - rituels saisonniers (solstices / équinoxes),
+    - rituels chamaniques (Amazonie / Andes),
+    - pratiques quotidiennes personnalisées.
+    """)
+
 
 # =========================
 #   PARAMÈTRES & ÉTAT
