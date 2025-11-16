@@ -1068,6 +1068,373 @@ SPREAD_PACKS = {
     },
 }
 
+# ================================================================
+# 📚 Onglets : Méthode & À propos
+# ================================================================
+
+with st.sidebar.expander("📘 Documentation"):
+    doc_section = st.radio(
+        "Onglets :",
+        [
+            "Méthode",
+            "À propos",
+        ]
+    )
+
+# ---------------------------------------------------------------
+# 🌿 MÉTHODE
+# ---------------------------------------------------------------
+if doc_section == "Méthode":
+    st.title("📘 Méthode de tirage")
+    st.markdown(
+        """
+        ## 🌀 Introduction
+
+        Cette application réunit plusieurs pratiques divinatoires et introspectives :
+        - Oracle 48 cartes  
+        - Oracle Pāli  
+        - Runes  
+        - I Ching (méthode classique complète)  
+        - Totems animaux (AmSud, AmNord, Asie)  
+        
+        Chaque système possède son **langage symbolique**, mais tous partagent une
+        fonction commune : éclairer une dynamique, une situation ou une intention.
+
+        ---
+
+        ## 🧭 Les principes de lecture
+
+        ### **1. Observer**
+        Accueillir la carte telle qu’elle apparaît, sans forcer l’interprétation.  
+        Voir ce qui résonne, ce qui résiste, ce qui surprend.
+
+        ### **2. Relier**
+        Connecter la carte avec :
+        - ta question,
+        - ton état émotionnel,
+        - le contexte actuel,
+        - un souvenir ou une intuition.
+
+        ### **3. Intégrer**
+        La carte suggère :
+        - une direction,
+        - une posture intérieure,
+        - une compréhension,
+        - un changement possible.
+
+        Rien n’est imposé :  
+        **la guidance est une co-création entre toi et le symbole.**
+
+        ---
+
+        ## 🔮 Méthodes incluses
+
+        ### 🌟 Oracle 48 cartes
+        Guidance intuitive, directe, émotionnelle, moderne.
+
+        ### 📜 Oracle Pāli
+        Sagesse bouddhiste ancienne : simplicité, clarté, présence.
+
+        ### ᚱ Runes nordiques
+        Vérité brute.  
+        Ancrage.  
+        Dynamique directe.
+
+        ### ☯ I Ching – méthode classique
+        - 6 traits tirés (yin, yang, yin mutant, yang mutant)  
+        - Hexagramme principal  
+        - Hexagramme de mutation  
+        - **Hexagramme nucléaire** (l’essence du mouvement)  
+        - **Hexagramme complémentaire**  
+
+        Le I Ching ne donne pas une réponse mais un **processus**.
+
+        ### 🐾 Totems animaux
+        Trois traditions réunies :
+        - Amazonie (médecine vivante)  
+        - Plaines nord-américaines (clans, directions)  
+        - Asie (équilibre, yin-yang)  
+
+        Le totem représente une **énergie alliée** à intégrer.
+
+        ---
+
+        ## 🧘 Rappel essentiel
+
+        Cette application ne prédit pas l’avenir.  
+        Elle révèle :
+        - un mouvement,
+        - une énergie,
+        - une direction,
+        - un enseignement.
+
+        Tu restes **auteur** de ton chemin.
+        """
+    )
+
+# ---------------------------------------------------------------
+# ℹ️ À PROPOS
+# ---------------------------------------------------------------
+elif doc_section == "À propos":
+    st.title("ℹ️ À propos")
+    st.markdown(
+        """
+        ## ✨ Vision du projet
+
+        Cette application est conçue comme un **espace de guidance intérieure**.  
+        Chaque tirage est un miroir qui éclaire ton état présent et ton potentiel.
+
+        Elle réunit des traditions variées, tissant un pont entre :
+        - symbolisme moderne,
+        - héritages ancestraux,
+        - sagesse spirituelle,
+        - exploration intuitive.
+
+        ---
+
+        ## 🔧 Fonctionnement
+
+        L’outil est développé en Python / Streamlit.  
+        Il intègre :
+        - un mode clair/sombre,  
+        - des cartes en flip 3D,  
+        - l’historique automatique des tirages,  
+        - des packs thématiques de tirages,  
+        - plusieurs jeux intégrés (Oracle, Pāli, Runes, I Ching, Totems),  
+        - des tirages avancés (Chakana, Voyage chamanique, Médecine animale).  
+
+        ---
+
+        ## 🌍 Inspirations principales
+
+        ### Oracle 48 cartes
+        Psychologie intuitive, développement intérieur, guidance émotionnelle.
+
+        ### Pāli
+        Vocabulaire de la voie bouddhiste ancienne :  
+        **présence, clarté, attention, équilibre**.
+
+        ### Runes
+        Tradition nordique :  
+        **ancrage, courage, vérité directe**.
+
+        ### I Ching
+        Texte fondateur chinois :  
+        **transformation, cycles, harmonie avec les forces du monde**.
+
+        ### Totems animaux
+        - **Amazonie** : médecine vivante, alliance avec l’esprit animal.  
+        - **Grandes plaines nord-américaines** : chemin, clan, direction.  
+        - **Asie** : équilibre, énergie vitale, harmonie intérieure.  
+
+        ---
+
+        ## ❤️ Note finale
+
+        Les cartes ne dictent rien.  
+        Elles ouvrent une porte.  
+        Celle que **toi** seul(e) peux franchir.
+
+        Merci d’utiliser cet espace de guidance  
+        — puisse-t-il t’accompagner avec douceur et clarté. 🌿
+        """
+    )
+# ---------------------------------------------------------------
+# 📚 LEXIQUE
+# ---------------------------------------------------------------
+elif doc_section == "Lexique":
+    st.title("📚 Lexique des systèmes divinatoires")
+
+    st.markdown("""
+    Ce lexique rassemble les notions essentielles utilisées dans les différents systèmes
+    présents dans l'application : Pāli, Runes, I Ching et Totems.
+
+    ---
+
+    ## 📜 Pāli — concepts fondamentaux
+
+    - **Sati** : attention, présence mentale.
+    - **Samādhi** : concentration, stabilité du mental.
+    - **Paññā** : sagesse intuitive.
+    - **Metta** : bienveillance, amour universel.
+    - **Dukkha** : tension, insatisfaction, devenir.
+    - **Anicca** : impermanence, changement constant.
+    - **Karuṇā** : compassion, réponse du cœur.
+    - **Citta** : cœur-esprit, espace de conscience.
+    - **Viriya** : énergie juste, effort équilibré.
+
+    ---
+
+    ## ᚱ Runes — Elder Futhark (24 runes)
+
+    Chaque rune représente une force vivante :
+
+    - **Fehu** : abondance, ressources, circulation.
+    - **Uruz** : puissance vitale, élan, courage.
+    - **Thurisaz** : protection, séparation juste.
+    - **Ansuz** : parole, inspiration, messages.
+    - **Raidho** : chemin, mouvement, voyage.
+    - **Kenaz** : feu intérieur, illumination.
+    - **Gebo** : échange, don, lien équilibré.
+    - **Wunjo** : harmonie, joie, complétude.
+
+    _(Je peux te générer le lexique complet des 24 runes si tu veux.)_
+
+    ---
+
+    ## ☯ I Ching — notions clés
+
+    - **Trait Yin (— —)** : réceptivité, écoute, intériorité.
+    - **Trait Yang (——)** : action, clarté, structure.
+    - **Trait mutant** : moment de bascule (6 ou 9).
+    - **Hexagramme principal** : situation actuelle.
+    - **Hexagramme de mutation** : évolution.
+    - **Hexagramme nucléaire** : essence subtile du processus.
+    - **Hexagramme complémentaire** : polarité inversée.
+
+    ---
+
+    ## 🐾 Totems — principes universels
+
+    - **Animal allié** : énergie disponible pour toi.
+    - **Médecine** : enseignement, guérison, guidance.
+    - **Ombre** : instinct refoulé, partie délaissée.
+    - **Pouvoir** : force brute à canaliser.
+    - **Direction** : Nord, Sud, Est, Ouest comme axes symboliques.
+
+    Si tu veux, je peux générer un **index complet** : 100+ animaux totems (Sud / Nord / Asie).
+    """)
+
+# ---------------------------------------------------------------
+# ❓ FAQ
+# ---------------------------------------------------------------
+elif doc_section == "FAQ":
+    st.title("❓ FAQ — Questions fréquentes")
+
+    st.markdown("""
+    ### **1. Le tirage prédit-il le futur ?**
+    Non.  
+    Les cartes révèlent des **dynamiques**, pas des évènements futurs fixes.
+
+    ---
+
+    ### **2. Comment formuler une bonne question ?**
+    Préfère une intention à une question fermée.  
+    Exemples :
+    - *Quelle est l'énergie qui m’accompagne ?*
+    - *Quel est le message pour aujourd’hui ?*
+    - *Que dois-je comprendre dans cette situation ?*
+
+    ---
+
+    ### **3. Que signifie une carte “négative” ?**
+    Rien n’est “négatif”.  
+    Certaines cartes montrent un défi, une ombre ou une transformation en cours.
+
+    ---
+
+    ### **4. Puis-je faire plusieurs tirages d’affilée ?**
+    Oui, mais laisse le temps d’intégrer.  
+    L’abus brouille la lecture intérieure.
+
+    ---
+
+    ### **5. Comment interpréter plusieurs systèmes ensemble (ex : runes + I Ching) ?**
+    Regarde ce qui :
+    - se répète,
+    - se complète,
+    - se renforce.
+
+    Le symbole commun est généralement le cœur du message.
+
+    ---
+
+    ### **6. Comment fonctionne l’historique ?**
+    Chaque tirage est sauvegardé uniquement pour la **session en cours**.
+
+    ---
+
+    ### **7. Est-ce dangereux ?**
+    Non.  
+    Ce ne sont que des symboles :  
+    **tu restes souverain(e)** de tes choix.
+
+    ---
+
+    Si tu veux je peux ajouter :
+    ✔ interprétation des cartes inversées  
+    ✔ guide des tirages amoureux  
+    ✔ guide d’auto-protection énergétique  
+    """)
+
+# ---------------------------------------------------------------
+# 🌟 PHILOSOPHIE / CRÉDITS
+# ---------------------------------------------------------------
+elif doc_section == "Philosophie":
+    st.title("🌟 Philosophie du projet")
+
+    st.markdown("""
+    ## 🌿 Une approche intégrative
+
+    Cette application rassemble différentes traditions — bouddhiste, nordique,
+    chinoise, chamaniques — sans les mélanger, mais en les laissant dialoguer.
+
+    Chaque système parle une langue différente, mais tous éclairent :
+    - la conscience,
+    - le cycle du vivant,
+    - les processus internes,
+    - le mouvement entre ombre et lumière.
+
+    ---
+
+    ## 💠 Guidances non prédictives
+
+    Le projet repose sur une idée simple :
+
+    **Le futur n’est pas fixé,  
+    mais le présent contient toutes les directions possibles.**
+
+    Les symboles révèlent :
+    - une dynamique,
+    - une tension,
+    - une ouverture,
+    - une transformation en cours.
+
+    ---
+
+    ## 💛 Éthique
+
+    - Aucune manipulation  
+    - Aucun fatalisme  
+    - Aucune dépendance  
+
+    Le but est :
+    - l’autonomie intérieure,
+    - la présence,
+    - la clarté,
+    - la souveraineté personnelle.
+
+    ---
+
+    ## 🔧 Développement
+
+    - Python + Streamlit  
+    - Cartes en flip 3D CSS  
+    - Moteur multisystème (Oracle / Pāli / Runes / I Ching / Totems)  
+    - Tirages avancés (Chakana, Voyage chamanique, Runes mutantes, I Ching classique)  
+
+    ---
+
+    ## ✨ Gratitude
+    Inspiré par :
+    - les traditions anciennes,  
+    - les praticiens de la voie intérieure,  
+    - les enseignements du vivant,  
+    - la magie des symboles.
+
+    Puissent ces outils t’accompagner avec justesse.
+    """)
+
 # =========================
 #   PARAMÈTRES & ÉTAT
 # =========================
