@@ -99,6 +99,11 @@ main.block-container {{
         radial-gradient(circle at 85% 120%, {accent_glow}, transparent 60%);
 }}
 
+.totem-border {
+    border: 2px solid rgba(255, 190, 120, 0.55) !important;
+    box-shadow: 0 0 14px rgba(255, 170, 60, 0.4);
+}
+
 .flip-card-front h3, .flip-card-back h3 {{
     margin-top: 0;
     margin-bottom: 0.5rem;
@@ -319,11 +324,344 @@ ICHING_CARDS = [
     {"nom": "64. Avant l’Accomplissement", "famille": "I Ching", "message": "Processus inachevé, tension finale.", "axe": "Ne pas relâcher juste avant le passage"},
 ]
 
+TOTEMS_AMS_CARDS = [
+    # Forêt amazonienne
+    {
+        "nom": "Jaguar",
+        "famille": "Totem – Forêt",
+        "message": "Puissance silencieuse, instinct affûté.",
+        "axe": "Reprendre possession de ta force intérieure",
+    },
+    {
+        "nom": "Anaconda",
+        "famille": "Totem – Forêt",
+        "message": "Énergie qui entoure, enserre et transforme.",
+        "axe": "Laisser mourir une ancienne peau",
+    },
+    {
+        "nom": "Dauphin rose",
+        "famille": "Totem – Fleuve",
+        "message": "Joie mystérieuse, intelligence ludique.",
+        "axe": "Guérir par le jeu et la douceur",
+    },
+    {
+        "nom": "Toucan",
+        "famille": "Totem – Forêt",
+        "message": "Parole colorée, expression visible.",
+        "axe": "Oser dire ta vérité avec couleurs",
+    },
+    {
+        "nom": "Ara bleu",
+        "famille": "Totem – Forêt",
+        "message": "Communication, liens sociaux, mémoire.",
+        "axe": "Soigner la qualité de tes échanges",
+    },
+    {
+        "nom": "Paresseux",
+        "famille": "Totem – Forêt",
+        "message": "Lenteur sacrée, économie d’énergie.",
+        "axe": "Arrêter d’en faire trop, choisir l’essentiel",
+    },
+    {
+        "nom": "Singe capucin",
+        "famille": "Totem – Forêt",
+        "message": "Curiosité, ruse, improvisation.",
+        "axe": "Retrouver le jeu dans la résolution des problèmes",
+    },
+    {
+        "nom": "Fourmilier géant",
+        "famille": "Totem – Forêt",
+        "message": "Patience, minutie, travail discret.",
+        "axe": "Avancer par petites actions répétées",
+    },
+
+    # Andes & hauts plateaux
+    {
+        "nom": "Condor",
+        "famille": "Totem – Andes",
+        "message": "Vision d’en haut, perspective spirituelle.",
+        "axe": "Prendre de la hauteur sur ta situation",
+    },
+    {
+        "nom": "Puma",
+        "famille": "Totem – Andes",
+        "message": "Force agile, courage en mouvement.",
+        "axe": "Passer de l’intention à l’action",
+    },
+    {
+        "nom": "Lama",
+        "famille": "Totem – Andes",
+        "message": "Porter des charges avec dignité.",
+        "axe": "Alléger ce que tu portes pour continuer sereinement",
+    },
+    {
+        "nom": "Alpaga",
+        "famille": "Totem – Andes",
+        "message": "Douceur, chaleur, ressource partagée.",
+        "axe": "Créer du confort pour toi et les autres",
+    },
+    {
+        "nom": "Renard des Andes",
+        "famille": "Totem – Andes",
+        "message": "Adaptation, discrétion, stratégie.",
+        "axe": "Ne pas tout montrer, choisir tes confidences",
+    },
+
+    # Rivages, marais, frontières
+    {
+        "nom": "Caïman",
+        "famille": "Totem – Eaux profondes",
+        "message": "Présence immobile, attaque fulgurante.",
+        "axe": "Attendre le bon moment avant d’agir",
+    },
+    {
+        "nom": "Tortue d’eau douce",
+        "famille": "Totem – Eaux lentes",
+        "message": "Ancienneté, sagesse lente, protection.",
+        "axe": "Bâtir sur le long terme sans précipitation",
+    },
+    {
+        "nom": "Capybara",
+        "famille": "Totem – Rive",
+        "message": "Vie communautaire, calme social.",
+        "axe": "Chercher des environnements où tu peux te détendre",
+    },
+    {
+        "nom": "Grenouille poison",
+        "famille": "Totem – Forêt humide",
+        "message": "Beauté intense, toxicité potentielle.",
+        "axe": "Voir où tu brilles et où tu te fais du mal",
+    },
+
+    # Nuit, mystère, médecine
+    {
+        "nom": "Chauve-souris",
+        "famille": "Totem – Nuit",
+        "message": "Navigation dans l’obscur, sens subtils.",
+        "axe": "Faire confiance à ce que tu ne vois pas clairement",
+    },
+    {
+        "nom": "Tatou",
+        "famille": "Totem – Terre",
+        "message": "Armure, limites, territoire.",
+        "axe": "Clarifier ce qui est à toi et ce qui ne l’est pas",
+    },
+    {
+        "nom": "Ocelot",
+        "famille": "Totem – Nuit",
+        "message": "Beauté féline, chasse intuitive.",
+        "axe": "Suivre tes ressentis plutôt que la logique brute",
+    },
+    {
+        "nom": "Serpent corail",
+        "famille": "Totem – Médecine",
+        "message": "Danger coloré, pouvoir du venin.",
+        "axe": "Respecter tes pouvoirs pour ne pas blesser",
+    },
+    {
+        "nom": "Araçari",
+        "famille": "Totem – Forêt",
+        "message": "Pont entre branches, transitions souples.",
+        "axe": "Te déplacer entre différents mondes sociaux",
+    },
+    {
+        "nom": "Manakin",
+        "famille": "Totem – Danse",
+        "message": "Parade, séduction, rythme.",
+        "axe": "Réintroduire le jeu et la danse dans ta présence",
+    },
+    {
+        "nom": "Seriema",
+        "famille": "Totem – Savane",
+        "message": "Veille, vigilance, cri d’alerte.",
+        "axe": "Ne pas ignorer les signaux précoces",
+    },
+]
+
+TOTEMS_AMN_CARDS = [
+    # Grandes plaines & forêts
+    {
+        "nom": "Bison",
+        "famille": "Totem – Plaines",
+        "message": "Puissance collective, abondance partagée.",
+        "axe": "Te relier à la force du groupe sans t’oublier",
+    },
+    {
+        "nom": "Loup",
+        "famille": "Totem – Meute",
+        "message": "Instinct, loyauté, enseignement.",
+        "axe": "Honorer tes instincts et ta tribu",
+    },
+    {
+        "nom": "Ours",
+        "famille": "Totem – Forêt",
+        "message": "Retrait, hibernation, introspection profonde.",
+        "axe": "T’autoriser des temps de retrait pour te régénérer",
+    },
+    {
+        "nom": "Aigle",
+        "famille": "Totem – Ciel",
+        "message": "Vision haute, courage spirituel.",
+        "axe": "Regarder plus loin que tes peurs immédiates",
+    },
+    {
+        "nom": "Corbeau",
+        "famille": "Totem – Mystère",
+        "message": "Magie, transformation, messages de l’invisible.",
+        "axe": "Reconnaître les signes que tu reçois déjà",
+    },
+    {
+        "nom": "Coyote",
+        "famille": "Totem – Trickster",
+        "message": "Humour, paradoxe, leçon déguisée.",
+        "axe": "Accepter que l’Univers t’enseigne aussi par la farce",
+    },
+    {
+        "nom": "Lynx",
+        "famille": "Totem – Secrets",
+        "message": "Discrétion, regard pénétrant.",
+        "axe": "Voir sans tout dire, garder le silence juste",
+    },
+    {
+        "nom": "Castor",
+        "famille": "Totem – Bâtisseur",
+        "message": "Construction, persévérance, habitat.",
+        "axe": "Structurer ton quotidien pour servir ton âme",
+    },
+    {
+        "nom": "Cheval mustang",
+        "famille": "Totem – Liberté",
+        "message": "Élan sauvage, esprit indompté.",
+        "axe": "Retrouver une liberté de mouvement intérieure",
+    },
+    {
+        "nom": "Caribou",
+        "famille": "Totem – Migration",
+        "message": "Endurance, cycles de déplacement.",
+        "axe": "Accepter que ta route passe par plusieurs territoires",
+    },
+    {
+        "nom": "Hibou",
+        "famille": "Totem – Nuit",
+        "message": "Voir dans l’obscurité, sagesse silencieuse.",
+        "axe": "Écouter ta connaissance intuitive même la nuit",
+    },
+    {
+        "nom": "Baleine",
+        "famille": "Totem – Océan",
+        "message": "Mémoire ancienne, chant, profondeur émotionnelle.",
+        "axe": "Honorer les mémoires profondes qui remontent",
+    },
+    {
+        "nom": "Orque",
+        "famille": "Totem – Clan",
+        "message": "Famille d’âme, coordination, puissance.",
+        "axe": "Trouver et nourrir ta véritable famille d’âme",
+    },
+    {
+        "nom": "Raton laveur",
+        "famille": "Totem – Masques",
+        "message": "Adaptation, rôle, débrouillardise.",
+        "axe": "Voir quels masques tu portes encore par sécurité",
+    },
+]
+
+TOTEMS_ASIA_CARDS = [
+    # Forêt & montagne
+    {
+        "nom": "Tigre",
+        "famille": "Totem – Forêt",
+        "message": "Puissance féline, détermination, instinct.",
+        "axe": "Oser défendre ton territoire énergétique",
+    },
+    {
+        "nom": "Panda",
+        "famille": "Totem – Douce force",
+        "message": "Force tranquille, douceur, équilibre yin.",
+        "axe": "T’autoriser à être fort et tendre en même temps",
+    },
+    {
+        "nom": "Grue",
+        "famille": "Totem – Ciel / Terre",
+        "message": "Grâce, longévité, pas mesuré.",
+        "axe": "Alléger tes mouvements et respecter ton rythme",
+    },
+    {
+        "nom": "Dragon",
+        "famille": "Totem – Esprit",
+        "message": "Puissance spirituelle, feu intérieur.",
+        "axe": "Reconnaître ton pouvoir créateur sans l’abuser",
+    },
+    {
+        "nom": "Tortue dragon (tortue sacrée)",
+        "famille": "Totem – Gardien",
+        "message": "Protection, sagesse lente, stabilité.",
+        "axe": "Construire sur du long terme, calmement",
+    },
+    {
+        "nom": "Serpent",
+        "famille": "Totem – Transformation",
+        "message": "Mue, guérison, énergie vitale.",
+        "axe": "Accepter de laisser tomber une ancienne identité",
+    },
+    {
+        "nom": "Macaque",
+        "famille": "Totem – Esprit joueur",
+        "message": "Intelligence vive, imitation, troupe.",
+        "axe": "Observer ce que tu reproduis sans t’en rendre compte",
+    },
+    {
+        "nom": "Yak",
+        "famille": "Totem – Haute montagne",
+        "message": "Endurance, support, service.",
+        "axe": "Soutenir sans te sacrifier entièrement",
+    },
+    {
+        "nom": "Éléphant d’Asie",
+        "famille": "Totem – Mémoire",
+        "message": "Stabilité, mémoire, loyauté.",
+        "axe": "Honorer ton histoire sans y rester coincé",
+    },
+    {
+        "nom": "Phénix",
+        "famille": "Totem – Renaissance",
+        "message": "Mort et renaissance, transmutation par le feu.",
+        "axe": "Accepter les cycles de destruction créatrice",
+    },
+    {
+        "nom": "Carpe koï",
+        "famille": "Totem – Eau",
+        "message": "Persévérance, sens du courant, ascension.",
+        "axe": "Continuer à avancer malgré les contre-courants",
+    },
+    {
+        "nom": "Loutre",
+        "famille": "Totem – Joie",
+        "message": "Jeu, complicité, plaisir simple.",
+        "axe": "Ramener du jeu dans tes relations",
+    },
+    {
+        "nom": "Cigale",
+        "famille": "Totem – Cycle",
+        "message": "Longue maturation, expression sonore.",
+        "axe": "Respecter les longs temps de préparation avant l’émergence",
+    },
+    {
+        "nom": "Griffon (totem hybride)",
+        "famille": "Totem – Gardien des seuils",
+        "message": "Protection de trésors intérieurs.",
+        "axe": "Protéger ce qui est sacré en toi",
+    },
+]
+
 DECKS = {
     "Oracle 48 cartes": ORACLE48_CARDS,
     "Oracle Pāli": PALI_CARDS,
     "Runes (Elder Futhark)": RUNES_CARDS,
     "I Ching (64 hexagrammes)": ICHING_CARDS,
+    "Totems animaux — Amérique du Sud": TOTEMS_AMS_CARDS,
+    "Totems animaux — Amérique du Nord": TOTEMS_AMN_CARDS,
+    "Totems animaux — Asie": TOTEMS_ASIA_CARDS,
 }
 
 # =========================
@@ -428,6 +766,35 @@ SPREADS = [
             "Le Passage — la transformation",
         ],
     },
+    {
+        "id": "chakana_andine",
+        "nom": "Chakana andine (7 cartes)",
+        "pack": "Spirituel",
+        "nb": 7,
+        "positions": [
+            "Centre — Cœur de ta situation",
+            "Nord — Sagesse / Ancêtres / Esprit",
+            "Sud — Enfant intérieur / Joie / Guérison",
+            "Est — Nouveau départ / Vision / Idée",
+            "Ouest — Transformation / Mort symbolique",
+            "Haut — Guidance supérieure",
+            "Bas — Ancrage / Corps / Racines",
+        ],
+    },
+    {
+        "id": "voyage_chamanique",
+        "nom": "Voyage chamanique",
+        "pack": "Spirituel",
+        "nb": 6,
+        "positions": [
+            "Entrée du voyage — Seuil, intention, porte d’accès",
+            "Guide — Présence qui t’accompagne ou t’ouvre le chemin",
+            "Tunnel / Passage — Ce que tu traverses actuellement",
+            "Animal totem — Force ou allié qui se présente",
+            "Message — Enseignement principal de ce voyage",
+            "Retour / Intégration — Comment revenir et intégrer dans ta vie",
+        ],
+    },
 
     # Décisionnels
     {
@@ -518,6 +885,41 @@ SPREADS = [
             "Terre — concret / matière",
         ],
     },
+    "Totems – Médecine animale": {
+        "Allié du moment (1 carte)": [
+            ("Animal allié", "La présence animale qui t’accompagne maintenant.")
+        ],
+        "Médecine du jour (3 cartes)": [
+            ("Totem", "L’énergie animale qui se présente."),
+            ("Défi", "Ce qu’elle veut t’aider à dépasser."),
+            ("Médecine", "L’enseignement qu’elle t’invite à intégrer."),
+        ],
+        "Totem d’ombre (3 cartes)": [
+            ("Ombre animale", "La part instinctive refoulée."),
+            ("Risque", "Le danger si tu résistes."),
+            ("Intégration", "Comment domestiquer cette énergie."),
+        ],
+        "Totem de pouvoir (4 cartes)": [
+            ("Animal principal", "Force en action."),
+            ("Voie haute", "Ton potentiel lumineux."),
+            ("Voie basse", "Quand la puissance déborde."),
+            ("Conseil", "Comment canaliser cette énergie."),
+        ],
+        "Roue chamanique (4 directions)": [
+            ("Nord", "Sagesse / Ancêtres / Vision supérieure."),
+            ("Sud", "Enfance / Joie / Guérison émotionnelle."),
+            ("Est", "Nouveau départ / Pensée / Inspiration."),
+            ("Ouest", "Transformation / Mort symbolique / Initiation."),
+        ],
+        "Chemin de médecine (5 cartes)": [
+            ("Passé animal", "L’énergie animale qui t’a construit(e)."),
+            ("Présent", "Ton énergie totem actuelle."),
+            ("Défi", "Le blocage que l’animal pointe."),
+            ("Allié caché", "Ce qui t’aide sans que tu le voies."),
+            ("Médecine finale", "L’enseignement global du totem pour cette période."),
+        ],
+    },
+}
 ]
 
 PACKS = sorted(sorted({s["pack"] for s in SPREADS}))
@@ -604,16 +1006,19 @@ def afficher_carte(carte, titre=None, description_position=None, container=None)
     pos_html = f'<div class="oracle-pos">{description_position}</div>' if description_position else ""
     front_title = titre if titre else "Carte"
 
+    # style spécial totems
+    is_totem = system_name.startswith("Totems animaux")
+
     html = (
         '<div class="flip-card">'
         '<div class="flip-card-inner">'
-        '<div class="flip-card-front">'
+        f'<div class="flip-card-front{" totem-border" if is_totem else ""}">'
         f'{pos_html}'
         f'<h3>{front_title} — {carte["nom"]}</h3>'
         f'<p><b>Famille :</b> {carte["famille"]}</p>'
         '<p class="flip-hint">Retourne la carte (survol / toucher) pour voir le message.</p>'
         '</div>'
-        '<div class="flip-card-back">'
+        f'<div class="flip-card-back{" totem-border" if is_totem else ""}">'
         f'{pos_html}'
         f'<h3>{carte["nom"]}</h3>'
         f'<p><b>Message :</b> {carte["message"]}</p>'
