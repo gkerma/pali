@@ -2,7 +2,7 @@ import random
 from datetime import datetime
 import streamlit as st
 
-st.set_page_config(page_title="Oracle 48 cartes", page_icon="🔮", layout="centered")
+st.set_page_config(page_title="Oracle multi-jeux", page_icon="🔮", layout="centered")
 
 # =========================
 #   THEME CLAIR / SOMBRE
@@ -141,14 +141,15 @@ textarea[aria-label="Texte à copier"] {{
 #       TITRE
 # =========================
 
-st.title("🔮 Oracle de 48 cartes")
-st.write("Passe la souris ou touche les cartes pour les retourner comme un véritable jeu de tarot.")
+st.title("🔮 Oracle multi-jeux")
+st.write("Oracle 48 cartes, Pāli, runes et I Ching dans une seule interface.")
 
 # =========================
-#       JEU DE CARTES
+#       JEUX / DECKS
 # =========================
 
-CARDS = [
+# Oracle 48 cartes (ton jeu principal)
+ORACLE48_CARDS = [
     # I. Voie intérieure
     {"nom": "Éveil", "famille": "Voie intérieure", "message": "Quelque chose s’ouvre en toi.", "axe": "Clarté intérieure"},
     {"nom": "Intuition", "famille": "Voie intérieure", "message": "Écoute la petite voix.", "axe": "Guidance subtile"},
@@ -205,6 +206,77 @@ CARDS = [
     {"nom": "Manifestation", "famille": "Guidance", "message": "Ce que tu portes prend forme.", "axe": "Concrétisation"},
     {"nom": "Unité", "famille": "Guidance", "message": "Tout est relié.", "axe": "Sagesse universelle"},
 ]
+
+# Oracle Pāli (mini deck – extensible)
+PALI_CARDS = [
+    {"nom": "Mettā", "famille": "Pāli", "message": "Bienveillance illimitée envers tous les êtres.", "axe": "Amour inconditionnel"},
+    {"nom": "Karunā", "famille": "Pāli", "message": "Compassion face à la souffrance.", "axe": "Cœur ouvert"},
+    {"nom": "Mudita", "famille": "Pāli", "message": "Joie empathique pour le bonheur d’autrui.", "axe": "Gratitude partagée"},
+    {"nom": "Upekkhā", "famille": "Pāli", "message": "Équanimité, centre stable.", "axe": "Neutralité bienveillante"},
+    {"nom": "Sati", "famille": "Pāli", "message": "Attention juste, présence consciente.", "axe": "Pleine conscience"},
+    {"nom": "Samādhi", "famille": "Pāli", "message": "Recueillement, unification de l’esprit.", "axe": "Concentration"},
+    {"nom": "Paññā", "famille": "Pāli", "message": "Vision claire de la réalité.", "axe": "Sagesse"},
+    {"nom": "Karuṇā-bhāvanā", "famille": "Pāli", "message": "Cultiver la compassion.", "axe": "Pratique du cœur"},
+    {"nom": "Anicca", "famille": "Pāli", "message": "Tout est impermanent.", "axe": "Lâcher-prise"},
+    {"nom": "Dukkha", "famille": "Pāli", "message": "Reconnaître l’insatisfaction pour la dépasser.", "axe": "Lucidité"},
+    {"nom": "Anattā", "famille": "Pāli", "message": "Rien n’est un “moi” séparé.", "axe": "Détachement de l’ego"},
+    {"nom": "Bhavana", "famille": "Pāli", "message": "Cultiver, développer le mental.", "axe": "Pratique intérieure"},
+]
+
+# Runes (Elder Futhark – version résumée)
+RUNES_CARDS = [
+    {"nom": "Fehu", "famille": "Rune", "message": "Flux, ressources, énergie vitale.", "axe": "Abondance en mouvement"},
+    {"nom": "Uruz", "famille": "Rune", "message": "Force brute, santé, puissance.", "axe": "Puissance sauvage"},
+    {"nom": "Thurisaz", "famille": "Rune", "message": "Portail, épreuve, protection.", "axe": "Franchir un seuil"},
+    {"nom": "Ansuz", "famille": "Rune", "message": "Parole, inspiration, message.", "axe": "Communication inspirée"},
+    {"nom": "Raidho", "famille": "Rune", "message": "Voyage, direction, chemin.", "axe": "Alignement du mouvement"},
+    {"nom": "Kenaz", "famille": "Rune", "message": "Torche, clarté, artisanat.", "axe": "Révélation"},
+    {"nom": "Gebo", "famille": "Rune", "message": "Don, échange, alliance.", "axe": "Partage juste"},
+    {"nom": "Wunjo", "famille": "Rune", "message": "Joie, harmonie, accomplissement.", "axe": "Contentement"},
+    {"nom": "Hagalaz", "famille": "Rune", "message": "Rupture, tempête, chaos fécond.", "axe": "Réinitialisation"},
+    {"nom": "Nauthiz", "famille": "Rune", "message": "Nécessité, tension, frein.", "axe": "Apprendre de la contrainte"},
+    {"nom": "Isa", "famille": "Rune", "message": "Glace, pause, stagnation.", "axe": "Immobilité consciente"},
+    {"nom": "Jera", "famille": "Rune", "message": "Récolte, cycle, résultat.", "axe": "Patience récompensée"},
+    {"nom": "Eihwaz", "famille": "Rune", "message": "Axe, endurance, protection profonde.", "axe": "Résilience"},
+    {"nom": "Perthro", "famille": "Rune", "message": "Mystère, destin, hasard.", "axe": "Lâcher prise sur le contrôle"},
+    {"nom": "Algiz", "famille": "Rune", "message": "Protection, intuition, lien spirituel.", "axe": "Ancrage sacré"},
+    {"nom": "Sowilo", "famille": "Rune", "message": "Soleil, réussite, vitalité.", "axe": "Rayonnement"},
+    {"nom": "Tiwaz", "famille": "Rune", "message": "Justice, sacrifice, honneur.", "axe": "Alignement éthique"},
+    {"nom": "Berkano", "famille": "Rune", "message": "Naissance, croissance, soin.", "axe": "Nourrir le vivant"},
+    {"nom": "Ehwaz", "famille": "Rune", "message": "Coopération, progrès, confiance.", "axe": "Alliances fécondes"},
+    {"nom": "Mannaz", "famille": "Rune", "message": "Humain, communauté, identité.", "axe": "Relation à soi et aux autres"},
+    {"nom": "Laguz", "famille": "Rune", "message": "Eau, intuition, flux émotionnel.", "axe": "Suivre le courant profond"},
+    {"nom": "Inguz", "famille": "Rune", "message": "Germination, potentiel, clôture.", "axe": "Achever pour renaître"},
+    {"nom": "Dagaz", "famille": "Rune", "message": "Aube, bascule, illumination.", "axe": "Passage lumière"},
+    {"nom": "Othala", "famille": "Rune", "message": "Héritage, foyer, ancêtres.", "axe": "Transmission"},
+]
+
+# I Ching – sélection partielle (16 hexagrammes)
+ICHING_CARDS = [
+    {"nom": "1. Le Créatif (Qián)", "famille": "I Ching", "message": "Élan créateur, initiative, puissance du ciel.", "axe": "Agir avec rectitude"},
+    {"nom": "2. Le Réceptif (Kūn)", "famille": "I Ching", "message": "Réceptivité, terre, accueil.", "axe": "Coopérer avec ce qui vient"},
+    {"nom": "3. La Difficulté initiale", "famille": "I Ching", "message": "Démarrage chaotique, confusion féconde.", "axe": "Organiser le chaos"},
+    {"nom": "5. L’Attente", "famille": "I Ching", "message": "Temps de maturation, patience active.", "axe": "Confiance dans le processus"},
+    {"nom": "11. La Paix", "famille": "I Ching", "message": "Harmonie, circulation entre haut et bas.", "axe": "Préserver l’équilibre"},
+    {"nom": "12. La Stagnation", "famille": "I Ching", "message": "Blocage, séparation des forces.", "axe": "Ne pas forcer, clarifier"},
+    {"nom": "24. Le Retour", "famille": "I Ching", "message": "Cycle, retour à soi, nouveau départ.", "axe": "Revenir à l’essentiel"},
+    {"nom": "29. L’Abîme", "famille": "I Ching", "message": "Danger répété, émotion profonde.", "axe": "Apprendre à travers l’épreuve"},
+    {"nom": "30. L’Adhérent (le Feu)", "famille": "I Ching", "message": "Clarté, lucidité, attachement.", "axe": "Voir sans s’agripper"},
+    {"nom": "37. La Famille", "famille": "I Ching", "message": "Cercle intime, structure, rôle.", "axe": "Clarifier la place de chacun"},
+    {"nom": "42. L’Accroissement", "famille": "I Ching", "message": "Croissance, aide reçue ou donnée.", "axe": "Soutenir et être soutenu"},
+    {"nom": "51. L’Éveilleur (le Tonnerre)", "famille": "I Ching", "message": "Choc, réveil, sursaut.", "axe": "Ne pas rester figé"},
+    {"nom": "52. L’Immobilisation", "famille": "I Ching", "message": "Repos, arrêt, intériorisation.", "axe": "Stabilité intérieure"},
+    {"nom": "57. Le Doux (le Vent)", "famille": "I Ching", "message": "Influence subtile, persévérante.", "axe": "Agir avec délicatesse"},
+    {"nom": "61. La Vérité intérieure", "famille": "I Ching", "message": "Sincérité, authenticité profonde.", "axe": "Alignement intérieur"},
+    {"nom": "64. Avant l’Accomplissement", "famille": "I Ching", "message": "Processus non achevé, vigilance.", "axe": "Rester attentif jusqu’au bout"},
+]
+
+DECKS = {
+    "Oracle 48 cartes": ORACLE48_CARDS,
+    "Oracle Pāli": PALI_CARDS,
+    "Runes (Elder Futhark)": RUNES_CARDS,
+    "I Ching (16 hexagrammes)": ICHING_CARDS,  # extensible à 64
+}
 
 # =========================
 #   TIRAGES AVANCÉS (PACKS)
@@ -406,6 +478,10 @@ PACKS = sorted(sorted({s["pack"] for s in SPREADS}))
 #   PARAMÈTRES & ÉTAT
 # =========================
 
+st.sidebar.header("🔁 Jeu / système")
+system_name = st.sidebar.selectbox("Choisir le jeu", list(DECKS.keys()))
+CARDS = DECKS[system_name]
+
 st.sidebar.header("⚙️ Type de tirage")
 tirage_mode_type = st.sidebar.radio(
     "Choisir le type",
@@ -437,6 +513,11 @@ if tirage_mode_type == "Standard (libre / croix / jour)":
         "Mode de tirage standard",
         ["Tirage libre (1–5 cartes)", "Tirage en croix (5 cartes)"],
     )
+
+    # Pour les decks qui ne se prêtent pas à la croix, tu peux rester en libre
+    if system_name != "Oracle 48 cartes":
+        # Pour simplifier : on force le mode libre si pas l’oracle principal
+        mode_radio = "Tirage libre (1–5 cartes)"
 
     if daily_mode:
         effective_mode_standard = "Tirage libre (1–5 cartes)"
@@ -495,17 +576,18 @@ def afficher_carte(carte, titre=None, description_position=None, container=None)
 #   TEXTE PRÊT À COPIER
 # =========================
 
-def build_summary(tirage, mode_label, question, timestamp, daily, positions=None):
+def build_summary(tirage, mode_label, question, timestamp, daily, positions=None, system=None):
     lines = []
     titre = "Tirage du jour" if daily else "Tirage de l’oracle"
     lines.append(f"{titre} — {timestamp}")
+    if system:
+        lines.append(f"Jeu : {system}")
     if question and question.strip():
         lines.append(f"Question : {question.strip()}")
     lines.append(f"Mode : {mode_label}")
     lines.append("")
 
     if positions is not None:
-        # Tirages avancés ou croix avec positions explicites
         for i, (c, pos) in enumerate(zip(tirage, positions), start=1):
             lines.append(
                 f"Carte {i} — {c['nom']} [{pos}]\n"
@@ -513,7 +595,6 @@ def build_summary(tirage, mode_label, question, timestamp, daily, positions=None
                 f"  Axe : {c['axe']}"
             )
     else:
-        # Tirages standard sans positions
         if mode_label.startswith("Tirage en croix"):
             pos_labels = [
                 "Situation actuelle",
@@ -555,8 +636,8 @@ with tab_tirage:
         btn_label = "Tirer la carte du jour ✨" if daily_mode else "Tirer les cartes ✨"
 
         if st.button(btn_label):
-            # Standard : libre ou croix
-            if mode_radio == "Tirage en croix (5 cartes)" and not daily_mode:
+            # Standard : libre ou croix (croix seulement pour l’oracle principal)
+            if system_name == "Oracle 48 cartes" and mode_radio == "Tirage en croix (5 cartes)" and not daily_mode:
                 tirage = random.sample(CARDS, 5)
                 mode_label = "Tirage en croix (5 cartes)"
             else:
@@ -568,6 +649,7 @@ with tab_tirage:
             st.session_state["history"].append(
                 {
                     "datetime": timestamp,
+                    "system": system_name,
                     "mode_type": "standard",
                     "mode_label": mode_label,
                     "daily": daily_mode,
@@ -577,7 +659,7 @@ with tab_tirage:
                 }
             )
 
-            st.subheader("🔮 Résultat du tirage")
+            st.subheader(f"🔮 Résultat du tirage ({system_name})")
 
             if question.strip():
                 st.markdown(f"**Intention :** _{question}_")
@@ -611,12 +693,12 @@ with tab_tirage:
                     with bottom[1]:
                         afficher_carte(c5, "Carte 5", "Issue potentielle (si tu suis ce chemin)")
 
-            summary_text = build_summary(tirage, mode_label, question, timestamp, daily_mode)
+            summary_text = build_summary(tirage, mode_label, question, timestamp, daily_mode, system=system_name)
             st.markdown("#### 📝 Texte prêt à copier")
             st.text_area("Texte à copier", summary_text, height=220)
 
     else:
-        # Tirages avancés (packs)
+        # Tirages avancés (packs), valables pour tous les jeux
         btn_label = "Lancer ce tirage avancé ✨"
         if st.button(btn_label) and selected_spread is not None:
             nb = selected_spread["nb"]
@@ -628,6 +710,7 @@ with tab_tirage:
             st.session_state["history"].append(
                 {
                     "datetime": timestamp,
+                    "system": system_name,
                     "mode_type": "advanced",
                     "mode_label": mode_label,
                     "daily": False,
@@ -639,7 +722,7 @@ with tab_tirage:
                 }
             )
 
-            st.subheader(f"🔮 Résultat — {selected_spread['nom']}")
+            st.subheader(f"🔮 Résultat — {selected_spread['nom']} ({system_name})")
             st.markdown(f"_Pack : **{selected_spread['pack']}**_")
             if question.strip():
                 st.markdown(f"**Intention :** _{question}_")
@@ -648,7 +731,7 @@ with tab_tirage:
             for i, (c, pos) in enumerate(zip(tirage, positions), start=1):
                 afficher_carte(c, f"Carte {i}", pos)
 
-            summary_text = build_summary(tirage, mode_label, question, timestamp, False, positions=positions)
+            summary_text = build_summary(tirage, mode_label, question, timestamp, False, positions=positions, system=system_name)
             st.markdown("#### 📝 Texte prêt à copier")
             st.text_area("Texte à copier", summary_text, height=220)
 
@@ -658,7 +741,7 @@ with tab_tirage:
         st.subheader("📚 Historique des tirages (session)")
 
         for idx, entry in enumerate(reversed(st.session_state["history"]), start=1):
-            titre_hist = f"{idx}. {entry['datetime']} — {entry['mode_label']}"
+            titre_hist = f"{idx}. {entry['datetime']} — {entry['mode_label']} — [{entry.get('system','')}]"
             if entry.get("daily"):
                 titre_hist += " (tirage du jour)"
             if entry.get("mode_type") == "advanced":
@@ -673,7 +756,6 @@ with tab_tirage:
                     for i, (c, pos) in enumerate(zip(entry["cards"], positions), start=1):
                         afficher_carte(c, f"Carte {i}", pos)
                 else:
-                    # standard
                     if entry["mode_label"].startswith("Tirage en croix"):
                         pos_labels = [
                             "Situation actuelle",
@@ -695,6 +777,7 @@ with tab_tirage:
                     entry["datetime"],
                     entry.get("daily", False),
                     positions=entry.get("positions"),
+                    system=entry.get("system"),
                 )
                 st.markdown("**Texte prêt à copier :**")
                 st.text_area("Texte à copier", txt, height=200, key=f"hist_{idx}")
@@ -703,51 +786,37 @@ with tab_tirage:
 
 # ----- ONGLET METHODE -----
 with tab_methode:
-    st.subheader("Comment utiliser cet oracle")
+    st.subheader("Comment utiliser cet oracle multi-jeux")
     st.markdown(
         """
-### 1. Préparer le tirage
-- Pose une **intention claire** ou une question ouverte.
-- Respire quelques instants, centre-toi sur ta sensation du moment.
-- Quand tu te sens prêt·e, lance le tirage.
+### 1. Choisir le jeu
+Dans la barre latérale :
 
-### 2. Tirages standard
-- **Tirage libre (1 à 5 cartes)** : vue simple, adaptable à ton usage.
-- **Tirage en croix (5 cartes)** : lecture globale d’une situation.
-- **Tirage du jour** : une seule carte, énergie du moment.
+- **Oracle 48 cartes** : ton oracle principal, structuré en 4 familles.
+- **Oracle Pāli** : mots-clés de la tradition pālie, orientés sur la pratique intérieure.
+- **Runes (Elder Futhark)** : archétypes nordiques, force, cycles, épreuves, protection.
+- **I Ching (16 hexagrammes)** : sélection de figures pour lecture des processus et mutations.
 
-### 3. Tirages avancés par packs
-Dans la barre latérale, choisis **“Tirages avancés (packs)”**, puis :
+### 2. Choisir le type de tirage
+- **Standard** : tirage libre (tous les jeux) + tirage en croix (oracle 48 cartes).
+- **Tirages avancés (packs)** : tirages structurés (relationnels, décisionnels, spirituels, etc.)
+  que tu peux utiliser avec n’importe quel jeu.
 
-- Un **pack** (relationnel, spirituel, décisionnel, etc.)
-- Un **tirage précis** dans ce pack
-
-Chaque tirage avancé :
-- possède un **nombre de cartes fixe**,
-- une **légende de position** pour chaque carte,
-- un **texte prêt à copier** pour ton journal ou tes consultations.
-
-Tu peux t’en servir pour :
-- explorer une relation,
-- éclairer un choix,
-- suivre ton évolution intérieure,
-- ou lire ton **“horoscope énergétique”** à 12 cartes.
-
-> Rappelle-toi : l’oracle ne t’enferme pas, il ouvre des pistes de lecture.
+### 3. Intégrer le message
+- Lis chaque carte comme une **entrée symbolique**.
+- Le **texte prêt à copier** te permet de garder trace dans un journal ou une consultation.
+- Tu peux tester **le même tirage avancé** avec différents jeux (ex : runes pour la même question).
         """
     )
 
 # ----- ONGLET TOUTES LES CARTES -----
 with tab_cartes:
-    st.subheader("Liste complète des cartes & légendes")
+    st.subheader(f"Cartes du jeu actuel : {system_name}")
 
-    familles_ordre = ["Voie intérieure", "Croissance", "Relations", "Guidance"]
-
-    for fam in familles_ordre:
+    # Pour les jeux autres que l’oracle 48, on liste simplement
+    familles = sorted(sorted({c["famille"] for c in CARDS}))
+    for fam in familles:
         cartes_famille = [c for c in CARDS if c["famille"] == fam]
-        if not cartes_famille:
-            continue
-
         st.markdown(f"## {fam}")
         for c in cartes_famille:
             st.markdown(
@@ -763,28 +832,32 @@ with tab_cartes:
 
 # ----- ONGLET A PROPOS -----
 with tab_apropos:
-    st.subheader("À propos de cet oracle")
+    st.subheader("À propos de cet oracle multi-jeux")
     st.markdown(
         """
-Cet oracle de 48 cartes est conçu comme un **outil de réflexion et d’introspection** :
+Cet outil rassemble plusieurs **systèmes symboliques** dans la même interface :
 
-- Il ne prédit pas l’avenir, il **met en lumière** des dynamiques déjà présentes.
-- Chaque carte est une **porte symbolique** : ton ressenti au moment du tirage fait partie de la réponse.
-- Les différents tirages (standard & packs) t’aident à regarder :
-  - ton quotidien,
-  - tes relations,
-  - tes choix,
-  - ton chemin intérieur,
-  - et l’orientation plus globale de ton énergie.
+- un **oracle de 48 cartes** original,
+- un mini-oracle **Pāli** (mots-clés de la tradition bouddhique),
+- les **runes nordiques** (Elder Futhark),
+- une sélection d’**hexagrammes de l’I Ching**.
 
-Tu es toujours libre de :
-- prendre ce qui résonne,
-- laisser ce qui ne parle pas,
-- compléter avec ton propre langage, tes pratiques, ta spiritualité.
+L’idée n’est pas de “prédire” quoi que ce soit,
+mais d’offrir plusieurs **langages symboliques** pour écouter autrement :
 
-> L’oracle ne sait rien à ta place.  
-> Il t’aide à écouter ce que tu sais déjà, un peu plus profondément.
+- tes relations,
+- tes choix,
+- tes passages de vie,
+- ton chemin intérieur.
+
+Tu peux :
+- comparer un même tirage avancé avec différents jeux,
+- garder trace via le **texte prêt à copier**,
+- étendre les decks en ajoutant tes propres cartes dans le code.
+
+> La forme change (jeu, culture, symbole).  
+> Le cœur reste : un espace pour t’écouter plus finement.
         """
     )
 
-st.caption("Oracle de 48 cartes — Deck physique virtuel • Tirages standard & avancés par packs • Texte prêt à copier • Historique par session.")
+st.caption("Oracle multi-jeux — Oracle 48 cartes • Pāli • Runes • I Ching • Tirages standard & avancés • Historique • Texte prêt à copier.")
