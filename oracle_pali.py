@@ -1068,6 +1068,39 @@ SPREAD_PACKS = {
     },
 }
 
+# =========================
+#   PARAMÈTRES & ÉTAT
+# =========================
+
+st.sidebar.header("🔁 Jeu / système")
+system_name = st.sidebar.selectbox("Choisir le jeu", list(DECKS.keys()))
+CARDS = DECKS[system_name]
+
+st.sidebar.header("⚙️ Type de tirage")
+
+type_options = [
+    "Standard (libre / croix / jour)",
+    "Tirages avancés (packs)",
+]
+
+# Mode I Ching classique seulement pour le deck I Ching
+if system_name.startswith("I Ching"):
+    type_options.append("Tirage I Ching classique (6 traits)")
+
+tirage_mode_type = st.sidebar.radio("Choisir le type", type_options)
+
+question = st.text_input("📝 Question / intention (facultatif)", "")
+
+# Historique dans la session
+if "history" not in st.session_state:
+    st.session_state["history"] = []
+
+st.sidebar.header("📚 Historique")
+show_history = st.sidebar.checkbox("Afficher l’historique des tirages", value=True)
+if st.sidebar.button("Effacer l’historique 🗑️"):
+    st.session_state["history"] = []
+
+
 # ================================================================
 # 📚 Onglets : Méthode & À propos
 # ================================================================
@@ -1609,39 +1642,6 @@ elif doc_section == "Rituels & pratiques":
     - rituels chamaniques (Amazonie / Andes),
     - pratiques quotidiennes personnalisées.
     """)
-
-
-# =========================
-#   PARAMÈTRES & ÉTAT
-# =========================
-
-st.sidebar.header("🔁 Jeu / système")
-system_name = st.sidebar.selectbox("Choisir le jeu", list(DECKS.keys()))
-CARDS = DECKS[system_name]
-
-st.sidebar.header("⚙️ Type de tirage")
-
-type_options = [
-    "Standard (libre / croix / jour)",
-    "Tirages avancés (packs)",
-]
-
-# Mode I Ching classique seulement pour le deck I Ching
-if system_name.startswith("I Ching"):
-    type_options.append("Tirage I Ching classique (6 traits)")
-
-tirage_mode_type = st.sidebar.radio("Choisir le type", type_options)
-
-question = st.text_input("📝 Question / intention (facultatif)", "")
-
-# Historique dans la session
-if "history" not in st.session_state:
-    st.session_state["history"] = []
-
-st.sidebar.header("📚 Historique")
-show_history = st.sidebar.checkbox("Afficher l’historique des tirages", value=True)
-if st.sidebar.button("Effacer l’historique 🗑️"):
-    st.session_state["history"] = []
 
 # ----- PARAMÈTRES STANDARD -----
 
