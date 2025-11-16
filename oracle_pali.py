@@ -207,25 +207,210 @@ CARDS = [
 ]
 
 # =========================
+#   TIRAGES AVANCÉS (PACKS)
+# =========================
+
+SPREADS = [
+    # Tirages courts
+    {
+        "id": "yin_yang",
+        "nom": "Yin / Yang",
+        "pack": "Tirages courts",
+        "nb": 2,
+        "positions": [
+            "Yin (réceptivité / introspection)",
+            "Yang (action / expression)",
+        ],
+    },
+    {
+        "id": "passe_present_futur",
+        "nom": "Passé / Présent / Futur",
+        "pack": "Tirages courts",
+        "nb": 3,
+        "positions": [
+            "Passé / Héritage",
+            "Présent",
+            "Futur probable",
+        ],
+    },
+
+    # Relationnels
+    {
+        "id": "relation_miroir",
+        "nom": "Relation à deux – miroir",
+        "pack": "Relationnel",
+        "nb": 6,
+        "positions": [
+            "Toi",
+            "L’autre",
+            "Dynamique du lien",
+            "Ce qui bloque",
+            "Ce qui libère",
+            "Potentiel de la relation",
+        ],
+    },
+    {
+        "id": "toi_ombre",
+        "nom": "Toi & ton ombre",
+        "pack": "Relationnel",
+        "nb": 3,
+        "positions": [
+            "Toi (conscient)",
+            "Ombre active",
+            "Message d’intégration",
+        ],
+    },
+    {
+        "id": "relation_karmique",
+        "nom": "Relation karmique",
+        "pack": "Relationnel",
+        "nb": 5,
+        "positions": [
+            "Origine karmique",
+            "Leçon actuelle",
+            "Blocage",
+            "Intégration",
+            "Évolution possible",
+        ],
+    },
+
+    # Spirituels
+    {
+        "id": "guides",
+        "nom": "Tirage des guides",
+        "pack": "Spirituel",
+        "nb": 3,
+        "positions": [
+            "Message principal",
+            "Alerte / attention",
+            "Conseil spirituel",
+        ],
+    },
+    {
+        "id": "ame",
+        "nom": "Tirage de l’âme",
+        "pack": "Spirituel",
+        "nb": 3,
+        "positions": [
+            "Ce que ton âme sait",
+            "Ce qu’elle t’invite à libérer",
+            "Ce qu’elle veut te voir incarner",
+        ],
+    },
+    {
+        "id": "porte_cle_passage",
+        "nom": "Porte / Clé / Passage",
+        "pack": "Spirituel",
+        "nb": 3,
+        "positions": [
+            "La Porte — ce qui s’ouvre",
+            "La Clé — ce qui permet",
+            "Le Passage — la transformation",
+        ],
+    },
+
+    # Décisionnels
+    {
+        "id": "choix_ab",
+        "nom": "Choix A / Choix B",
+        "pack": "Décisionnel",
+        "nb": 5,
+        "positions": [
+            "Énergie du choix A",
+            "Énergie du choix B",
+            "Ce qui t’aligne (axe de vérité)",
+            "Issue si tu choisis A",
+            "Issue si tu choisis B",
+        ],
+    },
+    {
+        "id": "chemin_actuel_potentiel",
+        "nom": "Chemin actuel / chemin potentiel",
+        "pack": "Décisionnel",
+        "nb": 3,
+        "positions": [
+            "Où mène ton chemin actuel",
+            "Où mènerait un nouveau chemin",
+            "Signal à écouter",
+        ],
+    },
+
+    # Évolution personnelle
+    {
+        "id": "evolution_personnelle",
+        "nom": "Évolution personnelle (7 cartes)",
+        "pack": "Évolution",
+        "nb": 7,
+        "positions": [
+            "Toi actuellement",
+            "Blocage",
+            "Blessure active",
+            "Ressource intérieure",
+            "Aide extérieure",
+            "Leçon",
+            "Transformation",
+        ],
+    },
+
+    # Horoscope énergétique
+    {
+        "id": "horoscope_energetique",
+        "nom": "Horoscope énergétique (12 cartes)",
+        "pack": "Horoscope énergétique",
+        "nb": 12,
+        "positions": [
+            "Vitalité / énergie de base",
+            "Sécurité / corps / maison intérieure",
+            "Communication / idées",
+            "Racines / passé",
+            "Expression / créativité",
+            "Santé / ajustements",
+            "Relations / liens proches",
+            "Transformation / alchimie",
+            "Vision / expansion",
+            "Mission / contribution",
+            "Guidance / intuition",
+            "Clôture & intégration",
+        ],
+    },
+
+    # Intention & éléments
+    {
+        "id": "reve_ancrage_action",
+        "nom": "Rêve / Ancrage / Action",
+        "pack": "Intention",
+        "nb": 3,
+        "positions": [
+            "Rêve / inspiration",
+            "Ancrage / limite",
+            "Action / prochaine étape",
+        ],
+    },
+    {
+        "id": "quatre_elements",
+        "nom": "4 éléments",
+        "pack": "Intention",
+        "nb": 4,
+        "positions": [
+            "Feu — mouvement, moteur",
+            "Eau — émotions",
+            "Air — pensées",
+            "Terre — concret / matière",
+        ],
+    },
+]
+
+PACKS = sorted(sorted({s["pack"] for s in SPREADS}))
+
+# =========================
 #   PARAMÈTRES & ÉTAT
 # =========================
 
-st.sidebar.header("⚙️ Paramètres du tirage")
-
-daily_mode = st.sidebar.checkbox("Mode tirage du jour (1 carte)", value=False)
-
-mode = st.sidebar.radio(
-    "Mode de tirage",
-    ["Tirage libre (1–5 cartes)", "Tirage en croix (5 cartes)"],
+st.sidebar.header("⚙️ Type de tirage")
+tirage_mode_type = st.sidebar.radio(
+    "Choisir le type",
+    ["Standard (libre / croix / jour)", "Tirages avancés (packs)"],
 )
-
-if daily_mode:
-    nb_cartes = 1
-else:
-    if mode == "Tirage libre (1–5 cartes)":
-        nb_cartes = st.sidebar.slider("Nombre de cartes :", 1, 5, 1)
-    else:
-        nb_cartes = 5
 
 question = st.text_input("📝 Question / intention (facultatif)", "")
 
@@ -238,8 +423,45 @@ show_history = st.sidebar.checkbox("Afficher l’historique des tirages", value=
 if st.sidebar.button("Effacer l’historique 🗑️"):
     st.session_state["history"] = []
 
+# ----- PARAMÈTRES STANDARD -----
+
+daily_mode = False
+mode_radio = None
+nb_cartes_standard = None
+
+if tirage_mode_type == "Standard (libre / croix / jour)":
+    st.sidebar.markdown("### Paramètres standard")
+    daily_mode = st.sidebar.checkbox("Mode tirage du jour (1 carte)", value=False)
+
+    mode_radio = st.sidebar.radio(
+        "Mode de tirage standard",
+        ["Tirage libre (1–5 cartes)", "Tirage en croix (5 cartes)"],
+    )
+
+    if daily_mode:
+        effective_mode_standard = "Tirage libre (1–5 cartes)"
+        nb_cartes_standard = 1
+    else:
+        effective_mode_standard = mode_radio
+        if effective_mode_standard == "Tirage libre (1–5 cartes)":
+            nb_cartes_standard = st.sidebar.slider("Nombre de cartes (libre) :", 1, 5, 1)
+        else:
+            nb_cartes_standard = 5
+
+# ----- PARAMÈTRES TIRAGES AVANCÉS -----
+
+selected_spread = None
+
+if tirage_mode_type == "Tirages avancés (packs)":
+    st.sidebar.markdown("### Tirages avancés")
+    pack_choice = st.sidebar.selectbox("Pack", PACKS)
+    spreads_in_pack = [s for s in SPREADS if s["pack"] == pack_choice]
+    spread_names = [s["nom"] for s in spreads_in_pack]
+    spread_name_choice = st.sidebar.selectbox("Tirage", spread_names)
+    selected_spread = next(s for s in spreads_in_pack if s["nom"] == spread_name_choice)
+
 # =========================
-#   FONCTION D'AFFICHAGE
+#   AFFICHAGE CARTE
 # =========================
 
 def afficher_carte(carte, titre=None, description_position=None, container=None):
@@ -273,37 +495,47 @@ def afficher_carte(carte, titre=None, description_position=None, container=None)
 #   TEXTE PRÊT À COPIER
 # =========================
 
-def build_summary(tirage, mode, question, timestamp, daily_mode):
+def build_summary(tirage, mode_label, question, timestamp, daily, positions=None):
     lines = []
-    titre = "Tirage du jour" if daily_mode else "Tirage de l’oracle"
+    titre = "Tirage du jour" if daily else "Tirage de l’oracle"
     lines.append(f"{titre} — {timestamp}")
-    if question.strip():
+    if question and question.strip():
         lines.append(f"Question : {question.strip()}")
-    lines.append(f"Mode : {mode}")
+    lines.append(f"Mode : {mode_label}")
     lines.append("")
 
-    if mode.startswith("Tirage libre"):
-        for i, c in enumerate(tirage, start=1):
-            lines.append(
-                f"Carte {i} — {c['nom']} "
-                f"(famille : {c['famille']})\n"
-                f"  Message : {c['message']}\n"
-                f"  Axe : {c['axe']}"
-            )
-    else:
-        positions = [
-            "Situation actuelle",
-            "Défi / obstacle",
-            "Ressource / atout",
-            "Conseil / chemin",
-            "Issue potentielle (si tu suis ce chemin)",
-        ]
+    if positions is not None:
+        # Tirages avancés ou croix avec positions explicites
         for i, (c, pos) in enumerate(zip(tirage, positions), start=1):
             lines.append(
                 f"Carte {i} — {c['nom']} [{pos}]\n"
                 f"  Message : {c['message']}\n"
                 f"  Axe : {c['axe']}"
             )
+    else:
+        # Tirages standard sans positions
+        if mode_label.startswith("Tirage en croix"):
+            pos_labels = [
+                "Situation actuelle",
+                "Défi / obstacle",
+                "Ressource / atout",
+                "Conseil / chemin",
+                "Issue potentielle (si tu suis ce chemin)",
+            ]
+            for i, (c, pos) in enumerate(zip(tirage, pos_labels), start=1):
+                lines.append(
+                    f"Carte {i} — {c['nom']} [{pos}]\n"
+                    f"  Message : {c['message']}\n"
+                    f"  Axe : {c['axe']}"
+                )
+        else:
+            for i, c in enumerate(tirage, start=1):
+                lines.append(
+                    f"Carte {i} — {c['nom']} "
+                    f"(famille : {c['famille']})\n"
+                    f"  Message : {c['message']}\n"
+                    f"  Axe : {c['axe']}"
+                )
 
     return "\n".join(lines)
 
@@ -317,80 +549,152 @@ tab_tirage, tab_methode, tab_cartes, tab_apropos = st.tabs(
 
 # ----- ONGLET TIRAGE -----
 with tab_tirage:
-    btn_label = "Tirer la carte du jour ✨" if daily_mode else "Tirer les cartes ✨"
-
     summary_text = ""
 
-    if st.button(btn_label):
-        tirage = random.sample(CARDS, nb_cartes)
-        timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+    if tirage_mode_type == "Standard (libre / croix / jour)":
+        btn_label = "Tirer la carte du jour ✨" if daily_mode else "Tirer les cartes ✨"
 
-        st.session_state["history"].append(
-            {
-                "datetime": timestamp,
-                "mode": mode,
-                "daily": daily_mode,
-                "question": question.strip(),
-                "cards": tirage,
-            }
-        )
+        if st.button(btn_label):
+            # Standard : libre ou croix
+            if mode_radio == "Tirage en croix (5 cartes)" and not daily_mode:
+                tirage = random.sample(CARDS, 5)
+                mode_label = "Tirage en croix (5 cartes)"
+            else:
+                tirage = random.sample(CARDS, nb_cartes_standard)
+                mode_label = "Tirage libre (1–5 cartes)"
 
-        st.subheader("🔮 Résultat du tirage")
+            timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
 
-        if question.strip():
-            st.markdown(f"**Intention :** _{question}_")
-            st.write("---")
+            st.session_state["history"].append(
+                {
+                    "datetime": timestamp,
+                    "mode_type": "standard",
+                    "mode_label": mode_label,
+                    "daily": daily_mode,
+                    "question": question.strip(),
+                    "cards": tirage,
+                    "positions": None,
+                }
+            )
 
-        if mode == "Tirage libre (1–5 cartes)":
-            st.markdown("### 🔹 Tirage libre")
-            for i, c in enumerate(tirage, start=1):
-                afficher_carte(c, f"Carte {i}")
-        else:
-            st.markdown("### ✖ Tirage en croix")
-            c1, c2, c3, c4, c5 = tirage
+            st.subheader("🔮 Résultat du tirage")
 
-            top = st.columns(3)
-            with top[1]:
-                afficher_carte(c3, "Carte 3", "Ressource / Atout")
+            if question.strip():
+                st.markdown(f"**Intention :** _{question}_")
+                st.write("---")
 
-            mid = st.columns(3)
-            with mid[0]:
-                afficher_carte(c2, "Carte 2", "Défi / Obstacle")
-            with mid[1]:
-                afficher_carte(c1, "Carte 1", "Situation actuelle")
-            with mid[2]:
-                afficher_carte(c4, "Carte 4", "Conseil / Chemin")
+            if mode_label.startswith("Tirage libre"):
+                st.markdown("### 🔹 Tirage libre")
+                for i, c in enumerate(tirage, start=1):
+                    afficher_carte(c, f"Carte {i}")
+            else:
+                st.markdown("### ✖ Tirage en croix")
 
-            bottom = st.columns(3)
-            with bottom[1]:
-                afficher_carte(c5, "Carte 5", "Issue potentielle (si tu suis ce chemin)")
+                if len(tirage) != 5:
+                    st.error("Erreur interne : le tirage en croix doit contenir 5 cartes.")
+                else:
+                    c1, c2, c3, c4, c5 = tirage
 
-        # Texte prêt à copier
-        summary_text = build_summary(tirage, mode, question, timestamp, daily_mode)
-        st.markdown("#### 📝 Texte prêt à copier")
-        st.text_area("Texte à copier", summary_text, height=220)
+                    top = st.columns(3)
+                    with top[1]:
+                        afficher_carte(c3, "Carte 3", "Ressource / Atout")
 
-    # Historique dans cet onglet
+                    mid = st.columns(3)
+                    with mid[0]:
+                        afficher_carte(c2, "Carte 2", "Défi / Obstacle")
+                    with mid[1]:
+                        afficher_carte(c1, "Carte 1", "Situation actuelle")
+                    with mid[2]:
+                        afficher_carte(c4, "Carte 4", "Conseil / Chemin")
+
+                    bottom = st.columns(3)
+                    with bottom[1]:
+                        afficher_carte(c5, "Carte 5", "Issue potentielle (si tu suis ce chemin)")
+
+            summary_text = build_summary(tirage, mode_label, question, timestamp, daily_mode)
+            st.markdown("#### 📝 Texte prêt à copier")
+            st.text_area("Texte à copier", summary_text, height=220)
+
+    else:
+        # Tirages avancés (packs)
+        btn_label = "Lancer ce tirage avancé ✨"
+        if st.button(btn_label) and selected_spread is not None:
+            nb = selected_spread["nb"]
+            positions = selected_spread["positions"]
+            tirage = random.sample(CARDS, nb)
+            mode_label = f"Tirage avancé — {selected_spread['nom']}"
+            timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+
+            st.session_state["history"].append(
+                {
+                    "datetime": timestamp,
+                    "mode_type": "advanced",
+                    "mode_label": mode_label,
+                    "daily": False,
+                    "question": question.strip(),
+                    "cards": tirage,
+                    "positions": positions,
+                    "pack": selected_spread["pack"],
+                    "spread_id": selected_spread["id"],
+                }
+            )
+
+            st.subheader(f"🔮 Résultat — {selected_spread['nom']}")
+            st.markdown(f"_Pack : **{selected_spread['pack']}**_")
+            if question.strip():
+                st.markdown(f"**Intention :** _{question}_")
+                st.write("---")
+
+            for i, (c, pos) in enumerate(zip(tirage, positions), start=1):
+                afficher_carte(c, f"Carte {i}", pos)
+
+            summary_text = build_summary(tirage, mode_label, question, timestamp, False, positions=positions)
+            st.markdown("#### 📝 Texte prêt à copier")
+            st.text_area("Texte à copier", summary_text, height=220)
+
+    # ----- Historique -----
     if show_history and st.session_state["history"]:
         st.write("---")
         st.subheader("📚 Historique des tirages (session)")
 
         for idx, entry in enumerate(reversed(st.session_state["history"]), start=1):
-            titre_hist = f"{idx}. {entry['datetime']} — {entry['mode']}"
+            titre_hist = f"{idx}. {entry['datetime']} — {entry['mode_label']}"
             if entry.get("daily"):
                 titre_hist += " (tirage du jour)"
+            if entry.get("mode_type") == "advanced":
+                titre_hist += f" — pack {entry.get('pack','')}"
+
             with st.expander(titre_hist, expanded=False):
                 if entry["question"]:
                     st.markdown(f"**Intention :** _{entry['question']}_")
                 st.write("")
-                for i, c in enumerate(entry["cards"], start=1):
-                    afficher_carte(c, f"Carte {i}")
+                positions = entry.get("positions")
+                if positions:
+                    for i, (c, pos) in enumerate(zip(entry["cards"], positions), start=1):
+                        afficher_carte(c, f"Carte {i}", pos)
+                else:
+                    # standard
+                    if entry["mode_label"].startswith("Tirage en croix"):
+                        pos_labels = [
+                            "Situation actuelle",
+                            "Défi / obstacle",
+                            "Ressource / atout",
+                            "Conseil / chemin",
+                            "Issue potentielle (si tu suis ce chemin)",
+                        ]
+                        for i, (c, pos) in enumerate(zip(entry["cards"], pos_labels), start=1):
+                            afficher_carte(c, f"Carte {i}", pos)
+                    else:
+                        for i, c in enumerate(entry["cards"], start=1):
+                            afficher_carte(c, f"Carte {i}")
+
                 txt = build_summary(
                     entry["cards"],
-                    entry["mode"],
+                    entry["mode_label"],
                     entry["question"],
                     entry["datetime"],
                     entry.get("daily", False),
+                    positions=entry.get("positions"),
                 )
                 st.markdown("**Texte prêt à copier :**")
                 st.text_area("Texte à copier", txt, height=200, key=f"hist_{idx}")
@@ -407,33 +711,29 @@ with tab_methode:
 - Respire quelques instants, centre-toi sur ta sensation du moment.
 - Quand tu te sens prêt·e, lance le tirage.
 
-### 2. Tirage libre (1 à 5 cartes)
-- **1 carte** : énergie / message du moment  
-- **2 cartes** : situation + conseil  
-- **3 cartes** : passé / présent / potentiel  
-- **4 cartes** : blocage – ressource – conseil – issue  
-- **5 cartes** : développement plus fin autour d’un thème (relation, projet…)
+### 2. Tirages standard
+- **Tirage libre (1 à 5 cartes)** : vue simple, adaptable à ton usage.
+- **Tirage en croix (5 cartes)** : lecture globale d’une situation.
+- **Tirage du jour** : une seule carte, énergie du moment.
 
-Lis chaque carte comme :
-- une **vibration** (famille),
-- un **message direct**,
-- un **axe de guidance** : là où ton attention est invitée.
+### 3. Tirages avancés par packs
+Dans la barre latérale, choisis **“Tirages avancés (packs)”**, puis :
 
-### 3. Tirage en croix (5 cartes)
-Positions :
-1. **Centre** – Situation actuelle  
-2. **Gauche** – Défi / obstacle  
-3. **Haut** – Ressource / atout  
-4. **Droite** – Conseil / chemin possible  
-5. **Bas** – Issue potentielle *si tu suis ce chemin*
+- Un **pack** (relationnel, spirituel, décisionnel, etc.)
+- Un **tirage précis** dans ce pack
 
-Tu peux lire la croix comme un **mouvement** :
-de ce que tu vis → ce qui te bloque → ce qui t’aide → ce qu’on te suggère → ce qui peut en émerger.
+Chaque tirage avancé :
+- possède un **nombre de cartes fixe**,
+- une **légende de position** pour chaque carte,
+- un **texte prêt à copier** pour ton journal ou tes consultations.
 
-### 4. Tirage du jour
-- Active le **mode tirage du jour** dans la barre latérale.
-- Une seule carte : **climat intérieur, ton axe de la journée**.
-- Note le texte prêt à copier dans ton journal pour suivre l’évolution des tirages.
+Tu peux t’en servir pour :
+- explorer une relation,
+- éclairer un choix,
+- suivre ton évolution intérieure,
+- ou lire ton **“horoscope énergétique”** à 12 cartes.
+
+> Rappelle-toi : l’oracle ne t’enferme pas, il ouvre des pistes de lecture.
         """
     )
 
@@ -470,10 +770,12 @@ Cet oracle de 48 cartes est conçu comme un **outil de réflexion et d’introsp
 
 - Il ne prédit pas l’avenir, il **met en lumière** des dynamiques déjà présentes.
 - Chaque carte est une **porte symbolique** : ton ressenti au moment du tirage fait partie de la réponse.
-- Tu peux l’utiliser :
-  - pour un **tirage quotidien** (énergie du jour),
-  - pour explorer une **relation**,
-  - pour clarifier un **projet ou un passage de vie**.
+- Les différents tirages (standard & packs) t’aident à regarder :
+  - ton quotidien,
+  - tes relations,
+  - tes choix,
+  - ton chemin intérieur,
+  - et l’orientation plus globale de ton énergie.
 
 Tu es toujours libre de :
 - prendre ce qui résonne,
@@ -485,4 +787,4 @@ Tu es toujours libre de :
         """
     )
 
-st.caption("Oracle de 48 cartes — Deck physique virtuel • Thème clair/sombre • Tirage libre, croix, tirage du jour • Historique • Texte prêt à copier.")
+st.caption("Oracle de 48 cartes — Deck physique virtuel • Tirages standard & avancés par packs • Texte prêt à copier • Historique par session.")
