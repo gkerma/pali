@@ -142,7 +142,7 @@ textarea[aria-label="Texte à copier"] {{
 # =========================
 
 st.title("🔮 Oracle multi-jeux")
-st.write("Oracle 48 cartes, Pāli, runes et I Ching dans une seule interface.")
+st.write("Oracle 48 cartes, Pāli, runes et I Ching (64 hexagrammes) dans une seule interface.")
 
 # =========================
 #       JEUX / DECKS
@@ -251,6 +251,7 @@ RUNES_CARDS = [
     {"nom": "Othala", "famille": "Rune", "message": "Héritage, foyer, ancêtres.", "axe": "Transmission"},
 ]
 
+# I Ching – 64 hexagrammes complets (King Wen)
 ICHING_CARDS = [
     {"nom": "1. Le Créatif (Qián)", "famille": "I Ching", "message": "Élan créateur, initiative, puissance du ciel.", "axe": "Agir avec force et rectitude"},
     {"nom": "2. Le Réceptif (Kūn)", "famille": "I Ching", "message": "Réceptivité, accueil, puissance de la terre.", "axe": "Coopérer humblement avec ce qui vient"},
@@ -322,7 +323,7 @@ DECKS = {
     "Oracle 48 cartes": ORACLE48_CARDS,
     "Oracle Pāli": PALI_CARDS,
     "Runes (Elder Futhark)": RUNES_CARDS,
-    "I Ching (16 hexagrammes)": ICHING_CARDS,  # extensible à 64
+    "I Ching (64 hexagrammes)": ICHING_CARDS,
 }
 
 # =========================
@@ -530,10 +531,17 @@ system_name = st.sidebar.selectbox("Choisir le jeu", list(DECKS.keys()))
 CARDS = DECKS[system_name]
 
 st.sidebar.header("⚙️ Type de tirage")
-tirage_mode_type = st.sidebar.radio(
-    "Choisir le type",
-    ["Standard (libre / croix / jour)", "Tirages avancés (packs)"],
-)
+
+type_options = [
+    "Standard (libre / croix / jour)",
+    "Tirages avancés (packs)",
+]
+
+# Mode I Ching classique seulement pour le deck I Ching
+if system_name.startswith("I Ching"):
+    type_options.append("Tirage I Ching classique (6 traits)")
+
+tirage_mode_type = st.sidebar.radio("Choisir le type", type_options)
 
 question = st.text_input("📝 Question / intention (facultatif)", "")
 
@@ -561,9 +569,8 @@ if tirage_mode_type == "Standard (libre / croix / jour)":
         ["Tirage libre (1–5 cartes)", "Tirage en croix (5 cartes)"],
     )
 
-    # Pour les decks qui ne se prêtent pas à la croix, tu peux rester en libre
+    # On force le mode libre pour les autres jeux que l’oracle 48
     if system_name != "Oracle 48 cartes":
-        # Pour simplifier : on force le mode libre si pas l’oracle principal
         mode_radio = "Tirage libre (1–5 cartes)"
 
     if daily_mode:
@@ -594,7 +601,6 @@ if tirage_mode_type == "Tirages avancés (packs)":
 
 def afficher_carte(carte, titre=None, description_position=None, container=None):
     target = container or st
-
     pos_html = f'<div class="oracle-pos">{description_position}</div>' if description_position else ""
     front_title = titre if titre else "Carte"
 
@@ -616,7 +622,6 @@ def afficher_carte(carte, titre=None, description_position=None, container=None)
         '</div>'
         '</div>'
     )
-
     target.markdown(html, unsafe_allow_html=True)
 
 # =========================
@@ -668,6 +673,110 @@ def build_summary(tirage, mode_label, question, timestamp, daily, positions=None
     return "\n".join(lines)
 
 # =========================
+#   HELPERS I CHING CLASSIQUE
+# =========================
+
+def iching_line_symbol(line_type: str) -> str:
+    """Petit dessin ASCII du trait."""
+    if line_type == "yang":
+        return "━━━━━━━"          # trait plein
+    if line_type == "yin":
+        return "━━   ━━"          # trait brisé
+    if line_type == "old_yang":
+        return "━━━━━━━  o"       # yang mutant
+    if line_type == "old_yin":
+        return "━━   ━━  x"       # yin mutant
+    return "?"
+
+def iching_line_label(line_type: str) -> str:
+    mapping = {
+        "yang": "Yang stable",
+        "yin": "Yin stable",
+        "old_yang": "Yang mutant (tend vers Yin)",
+        "old_yin": "Yin mutant (tend vers Yang)",
+    }
+    return mapping.get(line_type, line_type)
+
+# Trigrammes selon binaire (bas → haut)
+# 111 ☰ Ciel, 110 ☱ Lac, 101 ☲ Feu, 100 ☳ Tonnerre,
+# 011 ☴ Vent, 010 ☵ Eau, 001 ☶ Montagne, 000 ☷ Terre
+TRIGRAM_BITS_TO_INDEX = {
+    (1, 1, 1): 0,  # ☰
+    (1, 1, 0): 1,  # ☱
+    (1, 0, 1): 2,  # ☲
+    (1, 0, 0): 3,  # ☳
+    (0, 1, 1): 4,  # ☴
+    (0, 1, 0): 5,  # ☵
+    (0, 0, 1): 6,  # ☶
+    (0, 0, 0): 7,  # ☷
+}
+
+# Tableau King Wen : [lower trigram index][upper trigram index] → numéro d’hexagramme
+HEX_KINGWEN_FROM_TRIGRAMS = [
+    # upper:  ☰   ☱   ☲   ☳   ☴   ☵   ☶   ☷
+    [1,   43, 14, 34, 9,   5,  26, 11],  # lower ☰
+    [10,  58, 38, 54, 61, 60, 41, 19],  # lower ☱
+    [13,  49, 30, 55, 37, 63, 22, 36],  # lower ☲
+    [25,  17, 21, 51, 42, 3,  27, 24],  # lower ☳
+    [44,  28, 50, 32, 57, 48, 18, 46],  # lower ☴
+    [6,   47, 64, 40, 59, 29, 4,  7],   # lower ☵
+    [33,  31, 56, 62, 53, 39, 52, 15],  # lower ☶
+    [12,  45, 35, 16, 20, 8,  23, 2],   # lower ☷
+]
+
+def hex_number_from_bits(bits6):
+    """bits6 : liste de 6 bits (bas → haut), retourne le numéro d’hexagramme King Wen."""
+    lower_bits = tuple(bits6[0:3])
+    upper_bits = tuple(bits6[3:6])
+    lower_idx = TRIGRAM_BITS_TO_INDEX[lower_bits]
+    upper_idx = TRIGRAM_BITS_TO_INDEX[upper_bits]
+    return HEX_KINGWEN_FROM_TRIGRAMS[lower_idx][upper_idx]
+
+def iching_main_and_changed(traits):
+    """
+    traits: liste de 6 valeurs parmi ["yin","yang","old_yin","old_yang"] (bas → haut)
+    retourne (num_main, num_changed, bits_main, bits_changed)
+    """
+    bits_main = [1 if t in ("yang", "old_yang") else 0 for t in traits]
+    bits_changed = []
+    for t, b in zip(traits, bits_main):
+        if t == "old_yang":
+            bits_changed.append(0)  # yang mutant → yin
+        elif t == "old_yin":
+            bits_changed.append(1)  # yin mutant → yang
+        else:
+            bits_changed.append(b)
+
+    num_main = hex_number_from_bits(bits_main)
+    num_changed = hex_number_from_bits(bits_changed)
+    return num_main, num_changed, bits_main, bits_changed
+
+def build_iching_classic_summary(main_card, changed_card, num_main, num_changed,
+                                 traits, question, timestamp, system):
+    lines = []
+    lines.append(f"Tirage I Ching classique (6 traits) — {timestamp}")
+    if system:
+        lines.append(f"Jeu : {system}")
+    if question and question.strip():
+        lines.append(f"Question : {question.strip()}")
+    lines.append("")
+    lines.append("Traits (du bas vers le haut) :")
+    for i, t in enumerate(traits, start=1):
+        symbol = iching_line_symbol(t)
+        label = iching_line_label(t)
+        lines.append(f"  Ligne {i} : {symbol} — {label}")
+    lines.append("")
+    lines.append(f"Hexagramme principal : #{num_main} — {main_card['nom']}")
+    lines.append(f"  Message : {main_card['message']}")
+    lines.append(f"  Axe : {main_card['axe']}")
+    if num_changed != num_main and changed_card is not None:
+        lines.append("")
+        lines.append(f"Hexagramme de mutation : #{num_changed} — {changed_card['nom']}")
+        lines.append(f"  Message : {changed_card['message']}")
+        lines.append(f"  Axe : {changed_card['axe']}")
+    return "\n".join(lines)
+
+# =========================
 #   ONGLET PRINCIPAL
 # =========================
 
@@ -679,11 +788,11 @@ tab_tirage, tab_methode, tab_cartes, tab_apropos = st.tabs(
 with tab_tirage:
     summary_text = ""
 
+    # ---------- STANDARD ----------
     if tirage_mode_type == "Standard (libre / croix / jour)":
         btn_label = "Tirer la carte du jour ✨" if daily_mode else "Tirer les cartes ✨"
 
         if st.button(btn_label):
-            # Standard : libre ou croix (croix seulement pour l’oracle principal)
             if system_name == "Oracle 48 cartes" and mode_radio == "Tirage en croix (5 cartes)" and not daily_mode:
                 tirage = random.sample(CARDS, 5)
                 mode_label = "Tirage en croix (5 cartes)"
@@ -744,8 +853,8 @@ with tab_tirage:
             st.markdown("#### 📝 Texte prêt à copier")
             st.text_area("Texte à copier", summary_text, height=220)
 
-    else:
-        # Tirages avancés (packs), valables pour tous les jeux
+    # ---------- TIRAGES AVANCÉS ----------
+    elif tirage_mode_type == "Tirages avancés (packs)":
         btn_label = "Lancer ce tirage avancé ✨"
         if st.button(btn_label) and selected_spread is not None:
             nb = selected_spread["nb"]
@@ -778,9 +887,81 @@ with tab_tirage:
             for i, (c, pos) in enumerate(zip(tirage, positions), start=1):
                 afficher_carte(c, f"Carte {i}", pos)
 
-            summary_text = build_summary(tirage, mode_label, question, timestamp, False, positions=positions, system=system_name)
+            summary_text = build_summary(
+                tirage,
+                mode_label,
+                question,
+                timestamp,
+                False,
+                positions=positions,
+                system=system_name,
+            )
             st.markdown("#### 📝 Texte prêt à copier")
             st.text_area("Texte à copier", summary_text, height=220)
+
+    # ---------- TIRAGE I CHING CLASSIQUE HARDCORE ----------
+    elif tirage_mode_type.startswith("Tirage I Ching classique"):
+        if not system_name.startswith("I Ching"):
+            st.warning("Le tirage I Ching classique est réservé au jeu I Ching.")
+        else:
+            if st.button("Lancer le tirage I Ching classique ✨"):
+                # 6 traits, bas → haut
+                traits = [random.choice(["yin", "yang", "old_yin", "old_yang"]) for _ in range(6)]
+                num_main, num_changed, bits_main, bits_changed = iching_main_and_changed(traits)
+
+                main_hex = ICHING_CARDS[num_main - 1]
+                changed_hex = ICHING_CARDS[num_changed - 1] if num_changed != num_main else None
+
+                timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+
+                st.session_state["history"].append(
+                    {
+                        "datetime": timestamp,
+                        "system": system_name,
+                        "mode_type": "iching_classic",
+                        "mode_label": "Tirage I Ching classique (6 traits)",
+                        "daily": False,
+                        "question": question.strip(),
+                        "cards": [main_hex] if changed_hex is None else [main_hex, changed_hex],
+                        "positions": None,
+                        "traits": traits,
+                        "hex_num_main": num_main,
+                        "hex_num_changed": num_changed,
+                    }
+                )
+
+                st.subheader("🔮 Tirage I Ching classique (6 traits)")
+
+                if question.strip():
+                    st.markdown(f"**Intention :** _{question}_")
+                    st.write("---")
+
+                st.markdown("#### Traits (du bas vers le haut)")
+                for i, t in enumerate(traits, start=1):
+                    symbol = iching_line_symbol(t)
+                    label = iching_line_label(t)
+                    st.markdown(f"- Ligne {i} : `{symbol}` — {label}")
+
+                st.write("---")
+                st.markdown(f"### Hexagramme principal — #{num_main}")
+                afficher_carte(main_hex, "Hexagramme principal")
+
+                if changed_hex is not None and num_changed != num_main:
+                    st.markdown(f"### Hexagramme de mutation — #{num_changed}")
+                    afficher_carte(changed_hex, "Hexagramme de mutation")
+
+                summary_text = build_iching_classic_summary(
+                    main_hex,
+                    changed_hex,
+                    num_main,
+                    num_changed,
+                    traits,
+                    question,
+                    timestamp,
+                    system_name,
+                )
+                st.markdown("#### 📝 Texte prêt à copier")
+                st.text_area("Texte à copier", summary_text, height=260)
 
     # ----- Historique -----
     if show_history and st.session_state["history"]:
@@ -798,36 +979,76 @@ with tab_tirage:
                 if entry["question"]:
                     st.markdown(f"**Intention :** _{entry['question']}_")
                 st.write("")
+
+                mode_type = entry.get("mode_type", "standard")
                 positions = entry.get("positions")
-                if positions:
-                    for i, (c, pos) in enumerate(zip(entry["cards"], positions), start=1):
-                        afficher_carte(c, f"Carte {i}", pos)
+
+                # HISTORIQUE : I CHING CLASSIQUE
+                if mode_type == "iching_classic":
+                    traits = entry.get("traits", [])
+                    num_main = entry.get("hex_num_main")
+                    num_changed = entry.get("hex_num_changed")
+                    if traits:
+                        st.markdown("**Traits (du bas vers le haut) :**")
+                        for i, t in enumerate(traits, start=1):
+                            symbol = iching_line_symbol(t)
+                            label = iching_line_label(t)
+                            st.markdown(f"- Ligne {i} : `{symbol}` — {label}")
+                        st.write("")
+
+                    if num_main:
+                        main_hex = ICHING_CARDS[num_main - 1]
+                        st.markdown(f"**Hexagramme principal — #{num_main}**")
+                        afficher_carte(main_hex, "Hexagramme principal")
+                    if num_changed and num_changed != num_main:
+                        changed_hex = ICHING_CARDS[num_changed - 1]
+                        st.markdown(f"**Hexagramme de mutation — #{num_changed}**")
+                        afficher_carte(changed_hex, "Hexagramme de mutation")
+
+                    txt = build_iching_classic_summary(
+                        main_hex,
+                        changed_hex if num_changed and num_changed != num_main else None,
+                        num_main,
+                        num_changed,
+                        traits,
+                        entry["question"],
+                        entry["datetime"],
+                        entry.get("system"),
+                    )
+                    st.markdown("**Texte prêt à copier :**")
+                    st.text_area("Texte à copier", txt, height=260, key=f"hist_{idx}")
+
+                # HISTORIQUE : AUTRES MODES
                 else:
-                    if entry["mode_label"].startswith("Tirage en croix"):
-                        pos_labels = [
-                            "Situation actuelle",
-                            "Défi / obstacle",
-                            "Ressource / atout",
-                            "Conseil / chemin",
-                            "Issue potentielle (si tu suis ce chemin)",
-                        ]
-                        for i, (c, pos) in enumerate(zip(entry["cards"], pos_labels), start=1):
+                    if positions:
+                        for i, (c, pos) in enumerate(zip(entry["cards"], positions), start=1):
                             afficher_carte(c, f"Carte {i}", pos)
                     else:
-                        for i, c in enumerate(entry["cards"], start=1):
-                            afficher_carte(c, f"Carte {i}")
+                        if entry["mode_label"].startswith("Tirage en croix"):
+                            pos_labels = [
+                                "Situation actuelle",
+                                "Défi / obstacle",
+                                "Ressource / atout",
+                                "Conseil / chemin",
+                                "Issue potentielle (si tu suis ce chemin)",
+                            ]
+                            for i, (c, pos) in enumerate(zip(entry["cards"], pos_labels), start=1):
+                                afficher_carte(c, f"Carte {i}", pos)
+                        else:
+                            for i, c in enumerate(entry["cards"], start=1):
+                                afficher_carte(c, f"Carte {i}")
 
-                txt = build_summary(
-                    entry["cards"],
-                    entry["mode_label"],
-                    entry["question"],
-                    entry["datetime"],
-                    entry.get("daily", False),
-                    positions=entry.get("positions"),
-                    system=entry.get("system"),
-                )
-                st.markdown("**Texte prêt à copier :**")
-                st.text_area("Texte à copier", txt, height=200, key=f"hist_{idx}")
+                    txt = build_summary(
+                        entry["cards"],
+                        entry["mode_label"],
+                        entry["question"],
+                        entry["datetime"],
+                        entry.get("daily", False),
+                        positions=entry.get("positions"),
+                        system=entry.get("system"),
+                    )
+                    st.markdown("**Texte prêt à copier :**")
+                    st.text_area("Texte à copier", txt, height=200, key=f"hist_{idx}")
     elif show_history:
         st.info("Aucun tirage enregistré pour cette session.")
 
@@ -842,17 +1063,20 @@ Dans la barre latérale :
 - **Oracle 48 cartes** : ton oracle principal, structuré en 4 familles.
 - **Oracle Pāli** : mots-clés de la tradition pālie, orientés sur la pratique intérieure.
 - **Runes (Elder Futhark)** : archétypes nordiques, force, cycles, épreuves, protection.
-- **I Ching (16 hexagrammes)** : sélection de figures pour lecture des processus et mutations.
+- **I Ching (64 hexagrammes)** : lecture des processus, mutations, cycles.
 
-### 2. Choisir le type de tirage
-- **Standard** : tirage libre (tous les jeux) + tirage en croix (oracle 48 cartes).
-- **Tirages avancés (packs)** : tirages structurés (relationnels, décisionnels, spirituels, etc.)
-  que tu peux utiliser avec n’importe quel jeu.
+### 2. Type de tirage
+- **Standard** : tirage libre (tous les jeux) + tirage en croix (oracle 48).
+- **Packs avancés** : tirages structurés (relationnels, décisionnels, spirituels, etc.).
+- **Tirage I Ching classique (6 traits)** :
+  - 6 traits tirés du bas vers le haut.
+  - Hexagramme principal calculé par trigrammes.
+  - Hexagramme de mutation en fonction des lignes changeantes.
 
 ### 3. Intégrer le message
-- Lis chaque carte comme une **entrée symbolique**.
-- Le **texte prêt à copier** te permet de garder trace dans un journal ou une consultation.
-- Tu peux tester **le même tirage avancé** avec différents jeux (ex : runes pour la même question).
+- Lis chaque carte / hexagramme comme un **miroir symbolique**.
+- Le **texte prêt à copier** permet de garder trace dans un journal ou une consultation.
+- Tu peux comparer le même tirage (packs) avec différents jeux.
         """
     )
 
@@ -860,7 +1084,6 @@ Dans la barre latérale :
 with tab_cartes:
     st.subheader(f"Cartes du jeu actuel : {system_name}")
 
-    # Pour les jeux autres que l’oracle 48, on liste simplement
     familles = sorted(sorted({c["famille"] for c in CARDS}))
     for fam in familles:
         cartes_famille = [c for c in CARDS if c["famille"] == fam]
@@ -885,26 +1108,22 @@ with tab_apropos:
 Cet outil rassemble plusieurs **systèmes symboliques** dans la même interface :
 
 - un **oracle de 48 cartes** original,
-- un mini-oracle **Pāli** (mots-clés de la tradition bouddhique),
+- un mini-oracle **Pāli**,
 - les **runes nordiques** (Elder Futhark),
-- une sélection d’**hexagrammes de l’I Ching**.
+- les **64 hexagrammes du I Ching** en ordre King Wen,
+- un **mode I Ching classique** avec 6 traits, hexagramme principal et hexagramme de mutation.
 
-L’idée n’est pas de “prédire” quoi que ce soit,
-mais d’offrir plusieurs **langages symboliques** pour écouter autrement :
-
-- tes relations,
-- tes choix,
-- tes passages de vie,
-- ton chemin intérieur.
+L’objectif n’est pas de prédire l’avenir, mais d’ouvrir des
+**espaces de lecture et d’écoute** de ce que tu vis.
 
 Tu peux :
-- comparer un même tirage avancé avec différents jeux,
-- garder trace via le **texte prêt à copier**,
+- explorer une question avec plusieurs systèmes,
+- garder trace via le texte prêt à copier,
 - étendre les decks en ajoutant tes propres cartes dans le code.
 
-> La forme change (jeu, culture, symbole).  
-> Le cœur reste : un espace pour t’écouter plus finement.
+> La technique est précise, mais l’interprétation reste vivante :  
+> c’est toi le véritable oracle.
         """
     )
 
-st.caption("Oracle multi-jeux — Oracle 48 cartes • Pāli • Runes • I Ching • Tirages standard & avancés • Historique • Texte prêt à copier.")
+st.caption("Oracle multi-jeux — Oracle 48 cartes • Pāli • Runes • I Ching (64) • Tirages standard & avancés • Tirage I Ching classique • Historique • Texte prêt à copier.")
