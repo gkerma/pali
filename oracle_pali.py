@@ -925,7 +925,9 @@ SPREADS = [
     }
 ]
 
-PACKS = sorted(sorted({s["pack"] for s in SPREADS}))
+PACKS = sorted(
+    {s["pack"] for s in SPREADS if isinstance(s, dict) and "pack" in s}
+)
 
 # =========================
 #   PARAMÈTRES & ÉTAT
