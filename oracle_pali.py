@@ -919,7 +919,6 @@ SPREADS = [
             ("Médecine finale", "L’enseignement global du totem pour cette période."),
         ],
     },
-}
 ]
 
 PACKS = sorted(sorted({s["pack"] for s in SPREADS}))
