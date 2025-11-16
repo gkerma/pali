@@ -99,11 +99,6 @@ main.block-container {{
         radial-gradient(circle at 85% 120%, {accent_glow}, transparent 60%);
 }}
 
-.totem-border {
-    border: 2px solid rgba(255, 190, 120, 0.55) !important;
-    box-shadow: 0 0 14px rgba(255, 170, 60, 0.4);
-}
-
 .flip-card-front h3, .flip-card-back h3 {{
     margin-top: 0;
     margin-bottom: 0.5rem;
@@ -137,6 +132,12 @@ textarea[aria-label="Texte à copier"] {{
     font-family: "JetBrains Mono", "SF Mono", Menlo, Consolas, monospace;
     font-size: 0.9rem;
 }}
+
+.totem-border {{
+    border: 2px solid rgba(255, 190, 120, 0.55) !important;
+    box-shadow: 0 0 14px rgba(255, 170, 60, 0.4);
+}}
+
 </style>
     """,
     unsafe_allow_html=True,
