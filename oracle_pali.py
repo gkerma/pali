@@ -885,40 +885,43 @@ SPREADS = [
             "Terre — concret / matière",
         ],
     },
-    "Totems – Médecine animale": {
-        "Allié du moment (1 carte)": [
-            ("Animal allié", "La présence animale qui t’accompagne maintenant.")
-        ],
-        "Médecine du jour (3 cartes)": [
-            ("Totem", "L’énergie animale qui se présente."),
-            ("Défi", "Ce qu’elle veut t’aider à dépasser."),
-            ("Médecine", "L’enseignement qu’elle t’invite à intégrer."),
-        ],
-        "Totem d’ombre (3 cartes)": [
-            ("Ombre animale", "La part instinctive refoulée."),
-            ("Risque", "Le danger si tu résistes."),
-            ("Intégration", "Comment domestiquer cette énergie."),
-        ],
-        "Totem de pouvoir (4 cartes)": [
-            ("Animal principal", "Force en action."),
-            ("Voie haute", "Ton potentiel lumineux."),
-            ("Voie basse", "Quand la puissance déborde."),
-            ("Conseil", "Comment canaliser cette énergie."),
-        ],
-        "Roue chamanique (4 directions)": [
-            ("Nord", "Sagesse / Ancêtres / Vision supérieure."),
-            ("Sud", "Enfance / Joie / Guérison émotionnelle."),
-            ("Est", "Nouveau départ / Pensée / Inspiration."),
-            ("Ouest", "Transformation / Mort symbolique / Initiation."),
-        ],
-        "Chemin de médecine (5 cartes)": [
-            ("Passé animal", "L’énergie animale qui t’a construit(e)."),
-            ("Présent", "Ton énergie totem actuelle."),
-            ("Défi", "Le blocage que l’animal pointe."),
-            ("Allié caché", "Ce qui t’aide sans que tu le voies."),
-            ("Médecine finale", "L’enseignement global du totem pour cette période."),
-        ],
-    },
+
+    {
+        "Totems – Médecine animale": {
+            "Allié du moment (1 carte)": [
+                ("Animal allié", "La présence animale qui t’accompagne maintenant.")
+            ],
+            "Médecine du jour (3 cartes)": [
+                ("Totem", "L’énergie animale qui se présente."),
+                ("Défi", "Ce qu’elle veut t’aider à dépasser."),
+                ("Médecine", "L’enseignement qu’elle t’invite à intégrer."),
+            ],
+            "Totem d’ombre (3 cartes)": [
+                ("Ombre animale", "La part instinctive refoulée."),
+                ("Risque", "Le danger si tu résistes."),
+                ("Intégration", "Comment domestiquer cette énergie."),
+            ],
+            "Totem de pouvoir (4 cartes)": [
+                ("Animal principal", "Force en action."),
+                ("Voie haute", "Ton potentiel lumineux."),
+                ("Voie basse", "Quand la puissance déborde."),
+                ("Conseil", "Comment canaliser cette énergie."),
+            ],
+            "Roue chamanique (4 directions)": [
+                ("Nord", "Sagesse / Ancêtres / Vision supérieure."),
+                ("Sud", "Enfance / Joie / Guérison émotionnelle."),
+                ("Est", "Nouveau départ / Pensée / Inspiration."),
+                ("Ouest", "Transformation / Mort symbolique / Initiation."),
+            ],
+            "Chemin de médecine (5 cartes)": [
+                ("Passé animal", "L’énergie animale qui t’a construit(e)."),
+                ("Présent", "Ton énergie totem actuelle."),
+                ("Défi", "Le blocage que l’animal pointe."),
+                ("Allié caché", "Ce qui t’aide sans que tu le voies."),
+                ("Médecine finale", "L’enseignement global du totem pour cette période."),
+            ],
+        },
+    }
 ]
 
 PACKS = sorted(sorted({s["pack"] for s in SPREADS}))
