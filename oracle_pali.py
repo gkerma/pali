@@ -887,47 +887,186 @@ SPREADS = [
         ],
     },
 
-    {
-        "Totems – Médecine animale": {
-            "Allié du moment (1 carte)": [
-                ("Animal allié", "La présence animale qui t’accompagne maintenant.")
-            ],
-            "Médecine du jour (3 cartes)": [
-                ("Totem", "L’énergie animale qui se présente."),
-                ("Défi", "Ce qu’elle veut t’aider à dépasser."),
-                ("Médecine", "L’enseignement qu’elle t’invite à intégrer."),
-            ],
-            "Totem d’ombre (3 cartes)": [
-                ("Ombre animale", "La part instinctive refoulée."),
-                ("Risque", "Le danger si tu résistes."),
-                ("Intégration", "Comment domestiquer cette énergie."),
-            ],
-            "Totem de pouvoir (4 cartes)": [
-                ("Animal principal", "Force en action."),
-                ("Voie haute", "Ton potentiel lumineux."),
-                ("Voie basse", "Quand la puissance déborde."),
-                ("Conseil", "Comment canaliser cette énergie."),
-            ],
-            "Roue chamanique (4 directions)": [
-                ("Nord", "Sagesse / Ancêtres / Vision supérieure."),
-                ("Sud", "Enfance / Joie / Guérison émotionnelle."),
-                ("Est", "Nouveau départ / Pensée / Inspiration."),
-                ("Ouest", "Transformation / Mort symbolique / Initiation."),
-            ],
-            "Chemin de médecine (5 cartes)": [
-                ("Passé animal", "L’énergie animale qui t’a construit(e)."),
-                ("Présent", "Ton énergie totem actuelle."),
-                ("Défi", "Le blocage que l’animal pointe."),
-                ("Allié caché", "Ce qui t’aide sans que tu le voies."),
-                ("Médecine finale", "L’enseignement global du totem pour cette période."),
-            ],
-        },
-    }
+]
+
+# Nettoyage SPREADS : filtrer tout ce qui n'est pas conforme
+SPREADS = [
+    s for s in SPREADS
+    if isinstance(s, dict)
+    and "id" in s
+    and "nom" in s
+    and "pack" in s
+    and "nb" in s
+    and "positions" in s
 ]
 
 PACKS = sorted(
     {s["pack"] for s in SPREADS if isinstance(s, dict) and "pack" in s}
 )
+
+SPREAD_PACKS = {
+    # -------------------------------------------------------------
+    # 🌟 Pack général (tous jeux)
+    # -------------------------------------------------------------
+    "Général": {
+        "Tirage libre (1–5 cartes)": None,
+        "Tirage du jour (1 carte)": None,
+        "Passé / Présent / Futur (3 cartes)": [
+            ("Passé", "Ce qui t’a formé ou influencé."),
+            ("Présent", "Ce qui est actif maintenant."),
+            ("Futur", "Tendance ou direction probable."),
+        ],
+        "Yin / Yang (2 cartes)": [
+            ("Yin", "Réceptivité, écoute, intériorité."),
+            ("Yang", "Action, expression, mouvement."),
+        ],
+    },
+
+    # -------------------------------------------------------------
+    # ❤️ Pack relations
+    # -------------------------------------------------------------
+    "Relations": {
+        "Relation à deux – Miroir (6 cartes)": [
+            ("Toi", "Ton énergie actuelle."),
+            ("L’autre", "Son énergie."),
+            ("Lien", "La dynamique entre vous."),
+            ("Blocage", "Où ça coince."),
+            ("Ouverture", "Ce qui peut aider."),
+            ("Potentiel", "Évolution possible."),
+        ],
+        "Ombre relationnelle (3 cartes)": [
+            ("Ombre consciente", "Ce que tu vois déjà."),
+            ("Ombre inconsciente", "Ce que tu nies."),
+            ("Intégration", "Comment pacifier cette ombre."),
+        ],
+    },
+
+    # -------------------------------------------------------------
+    # 🔮 Pack spirituel
+    # -------------------------------------------------------------
+    "Spirituel": {
+        "Tirage des guides (3 cartes)": [
+            ("Message", "L’enseignement principal."),
+            ("Alerte", "Ce qui demande attention."),
+            ("Conseil", "La direction spirituelle."),
+        ],
+        "Tirage de l’âme (3 cartes)": [
+            ("Savoir profond", "Ce que ton âme sait."),
+            ("Libération", "Ce qu’elle veut que tu lâches."),
+            ("Incarnation", "Ce qu’elle veut que tu vives."),
+        ],
+        "Porte / Clé / Passage (3 cartes)": [
+            ("Porte", "Ce qui s’ouvre."),
+            ("Clé", "Ce qui permet."),
+            ("Passage", "Ce que tu traverses."),
+        ],
+        # ✨ Chakana andine (7 cartes)
+        "Chakana andine (7 cartes)": [
+            ("Centre", "Cœur de ta situation."),
+            ("Nord", "Sagesse / Ancêtres / Vision supérieure."),
+            ("Sud", "Guérison émotionnelle / Enfant intérieur."),
+            ("Est", "Nouveau départ, vision, idée."),
+            ("Ouest", "Transformation / Mort symbolique."),
+            ("Haut", "Guidance spirituelle."),
+            ("Bas", "Ancrage / Corps / Racines."),
+        ],
+        # ✨ Voyage chamanique (6 cartes)
+        "Voyage chamanique (6 cartes)": [
+            ("Entrée", "Le seuil, l’intention, la porte."),
+            ("Guide", "L’esprit ou présence qui t’accompagne."),
+            ("Tunnel", "Ce que tu traverses actuellement."),
+            ("Animal", "L’allié ou force qui se présente."),
+            ("Message", "L’enseignement principal."),
+            ("Retour", "Comment intégrer le voyage."),
+        ],
+    },
+
+    # -------------------------------------------------------------
+    # ⚖️ Pack décisionnel
+    # -------------------------------------------------------------
+    "Décisionnel": {
+        "Choix A / Choix B (5 cartes)": [
+            ("Choix A", "L’énergie du choix A."),
+            ("Choix B", "L’énergie du choix B."),
+            ("Axe de vérité", "Ce qui t’aligne réellement."),
+            ("Issue A", "Si tu actives A."),
+            ("Issue B", "Si tu actives B."),
+        ],
+        "Chemin actuel / Chemin potentiel (3 cartes)": [
+            ("Chemin actuel", "Où tu vas si tu continues ainsi."),
+            ("Nouveau chemin", "Ce que tu peux ouvrir."),
+            ("Signal", "Ce qui doit guider ta décision."),
+        ],
+    },
+
+    # -------------------------------------------------------------
+    # 🔱 Pack grands tirages
+    # -------------------------------------------------------------
+    "Grand tirages": {
+        "Évolution personnelle (7 cartes)": [
+            ("Toi", "Ton énergie actuelle."),
+            ("Blocage", "Le frein en place."),
+            ("Blessure", "Ce qui reste douloureux."),
+            ("Ressource", "Ton potentiel intérieur."),
+            ("Soutien", "Aide extérieure."),
+            ("Leçon", "Ce que tu apprends."),
+            ("Transformation", "L’aboutissement."),
+        ],
+        "Horoscope énergétique (12 cartes)": [
+            ("Maison 1", "Vitalité, identité."),
+            ("Maison 2", "Sécurité, ressources."),
+            ("Maison 3", "Communication."),
+            ("Maison 4", "Racines."),
+            ("Maison 5", "Expression."),
+            ("Maison 6", "Santé."),
+            ("Maison 7", "Relation."),
+            ("Maison 8", "Transformation."),
+            ("Maison 9", "Vision."),
+            ("Maison 10", "Mission."),
+            ("Maison 11", "Réseaux."),
+            ("Maison 12", "Intégration."),
+        ],
+    },
+
+    # -------------------------------------------------------------
+    # 🐾 Pack Totems — Médecine animale
+    # (Sud, Nord, Asie → même structure)
+    # -------------------------------------------------------------
+    "Totems – Médecine animale": {
+        "Allié du moment (1 carte)": [
+            ("Animal allié", "La présence qui t’accompagne maintenant.")
+        ],
+        "Médecine du jour (3 cartes)": [
+            ("Totem", "L’énergie animale qui se présente."),
+            ("Défi", "Ce qu’elle veut t’aider à dépasser."),
+            ("Médecine", "L’enseignement de la journée."),
+        ],
+        "Totem d’ombre (3 cartes)": [
+            ("Ombre", "La part instinctive refoulée."),
+            ("Risque", "Si l’ombre prend le contrôle."),
+            ("Intégration", "Comment équilibrer cette énergie."),
+        ],
+        "Totem de pouvoir (4 cartes)": [
+            ("Animal", "La force en action."),
+            ("Voie haute", "Ton potentiel lumineux."),
+            ("Voie basse", "Le débordement possible."),
+            ("Conseil", "Comment canaliser cette puissance."),
+        ],
+        "Roue chamanique (4 directions)": [
+            ("Nord", "Sagesse / Vision."),
+            ("Sud", "Joie / Guérison."),
+            ("Est", "Vision / Inspiration."),
+            ("Ouest", "Transformation / Initiation."),
+        ],
+        "Chemin de médecine (5 cartes)": [
+            ("Passé", "L’énergie animale qui t’a construit(e)."),
+            ("Présent", "Ton totem actuel."),
+            ("Défi", "Ce que l’animal pointe."),
+            ("Allié caché", "Soutien invisible."),
+            ("Médecine finale", "L’enseignement global."),
+        ],
+    },
+}
 
 # =========================
 #   PARAMÈTRES & ÉTAT
@@ -997,7 +1136,12 @@ selected_spread = None
 if tirage_mode_type == "Tirages avancés (packs)":
     st.sidebar.markdown("### Tirages avancés")
     pack_choice = st.sidebar.selectbox("Pack", PACKS)
-    spreads_in_pack = [s for s in SPREADS if s["pack"] == pack_choice]
+    spreads_in_pack = [
+        s for s in SPREADS
+        if isinstance(s, dict)
+        and "pack" in s
+        and s["pack"] == pack_choice
+    ]
     spread_names = [s["nom"] for s in spreads_in_pack]
     spread_name_choice = st.sidebar.selectbox("Tirage", spread_names)
     selected_spread = next(s for s in spreads_in_pack if s["nom"] == spread_name_choice)
