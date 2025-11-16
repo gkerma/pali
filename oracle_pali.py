@@ -949,7 +949,7 @@ with tab_tirage:
             st.text_area("Texte à copier", summary_text, height=220)
 
     # ---------- TIRAGE I CHING CLASSIQUE HARDCORE ----------
-        elif tirage_mode_type.startswith("Tirage I Ching classique"):
+    elif tirage_mode_type.startswith("Tirage I Ching classique"):
         if not system_name.startswith("I Ching"):
             st.warning("Le tirage I Ching classique est réservé au jeu I Ching.")
         else:
